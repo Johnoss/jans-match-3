@@ -8,8 +8,8 @@ using Zenject;
 namespace MVC
 {
     [UsedImplicitly]
-    public class ViewPool<TView>
-        where TView : AbstractView, IPoolableView
+    public class EntityViewPool<TView>
+        where TView : AbstractView, IPoolableEntityView
     {
         private readonly Queue<TView> _views = new();
 
@@ -31,6 +31,7 @@ namespace MVC
         {
             var view = _views.Any() ? _views.Dequeue() : _viewFactory.Create(entity);
             view.transform.SetParent(parent, worldPositionStays);
+            view.SetEntity(entity);
             view.ResetView();
             return view;
         }
@@ -38,6 +39,7 @@ namespace MVC
         private void AddView(TView view)
         {
             view.transform.SetParent(_pooledObjectsParent);
+            view.SetEntity(ECSTypes.NULL);
             view.DisableView();
             _views.Enqueue(view);
         }

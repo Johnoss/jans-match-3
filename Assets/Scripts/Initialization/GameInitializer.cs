@@ -3,7 +3,7 @@ using Scripts.Features.Grid;
 using Scripts.Features.Piece;
 using UnityEngine;
 using Zenject;
-using static Scripts.Features.Piece.PieceView;
+using static Scripts.Features.Piece.PieceEntityView;
 
 namespace Initialization
 {
@@ -11,7 +11,7 @@ namespace Initialization
     {
         [Inject] private ViewFactory _viewFactory;
         
-        [Inject] private ViewPool<PieceView> _pieceViewPool;
+        [Inject] private EntityViewPool<PieceEntityView> _pieceEntityViewPool;
         
         [Inject] private GridService _gridService;
         [Inject] private GridConfig _gridConfig;
@@ -33,7 +33,7 @@ namespace Initialization
 
         private void SetupPools()
         {
-            _pieceViewPool.SetupPool(_gridConfig.GridSize, _viewFactory, _pooledObjectsParent);
+            _pieceEntityViewPool.SetupPool(_gridConfig.GridSize, _viewFactory, _pooledObjectsParent);
         }
     }
 }

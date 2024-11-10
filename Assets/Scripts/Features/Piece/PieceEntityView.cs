@@ -1,4 +1,6 @@
+using Leopotam.EcsLite;
 using MVC;
+using Scripts.Features.Grid;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -6,7 +8,7 @@ using Zenject;
 namespace Scripts.Features.Piece
 {
     [RequireComponent(typeof(RectTransform))]
-    public class PieceView : AbstractView, IPoolableView
+    public class PieceEntityView : AbstractView, IPoolableEntityView
     {
         [Header("References")]
         [SerializeField] private RectTransform _rectTransform;
@@ -15,28 +17,36 @@ namespace Scripts.Features.Piece
         [SerializeField] private Image _mouthImage;
         
         private int _entity;
-        private ViewPool<PieceView> _viewPool;
+        private EntityViewPool<PieceEntityView> _entityViewPool;
         private PieceConfig _pieceConfig;
+        private GridConfig _gridConfig;
+        private EcsWorld _world;
         
         private PieceSetting _pieceSetting;
-        
+
         [Inject]
-        public void Construct(int entity, PieceConfig pieceConfig, ViewPool<PieceView> viewPool)
+        public void Construct(int entity, PieceConfig pieceConfig, GridConfig gridConfig, EntityViewPool<PieceEntityView> entityViewPool, EcsWorld world)
         {
             _entity = entity;
             _pieceConfig = pieceConfig;
-            _viewPool = viewPool;
-            
-            SetupVisuals();
+            _gridConfig = gridConfig;
+            _entityViewPool = entityViewPool;
+            _world = world;
         }
         
         private void SetupVisuals()
         {
-            //TODO implement
-            _pieceSetting = _pieceConfig.GetPieceSetting(0);
+            var pieceTypeComponent = _world.GetPool<PieceTypeComponent>().Get(_entity);
+            _rectTransform.sizeDelta = _gridConfig.TileSize;
+            _pieceSetting = _pieceConfig.GetPieceSetting(pieceTypeComponent.TypeIndex);
             
             _bodyImage.sprite = _pieceSetting.BodySprite;
             _eyesImage.color = _pieceSetting.EyesTintColor;
+        }
+
+        public void SetEntity(int entity)
+        {
+            _entity = entity;
         }
 
         public void ResetView()
@@ -46,13 +56,15 @@ namespace Scripts.Features.Piece
             _bodyImage.overrideSprite = null;
             
             _rectTransform.anchoredPosition = Vector2.zero;
+            
+            SetupVisuals();
         }
 
         public void DisableView()
         {
         }
 
-        public class ViewFactory : PlaceholderFactory<int, PieceView>
+        public class ViewFactory : PlaceholderFactory<int, PieceEntityView>
         {
         }
     }

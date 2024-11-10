@@ -15,10 +15,10 @@ namespace Initialization
         
         public override void InstallBindings()
         {
-            Container.Bind<ViewPool<PieceView>>().AsSingle();
+            Container.Bind<EntityViewPool<PieceEntityView>>().AsSingle();
             
-            Container.BindFactory<int, PieceView, PieceView.ViewFactory>()
-                .FromComponentInNewPrefab(_pieceConfig.PiecePrefab);
+            Container.BindFactory<int, PieceEntityView, PieceEntityView.ViewFactory>()
+                .FromComponentInNewPrefab(_pieceConfig.PieceEntityPrefab);
             
             Container.BindFactory<int, TileView, TileView.ViewFactory>()
                 .FromComponentInNewPrefab(_gridConfig.TilePrefab)

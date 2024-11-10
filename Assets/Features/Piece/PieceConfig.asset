@@ -16,3 +16,11 @@ MonoBehaviour:
   _pieceSettings:
   - BodySprite: {fileID: 21300008, guid: 51e2a399831333b478ec978ee598bf0e, type: 3}
     EyesTintColor: {r: 0.49803925, g: 0.7568628, b: 0.909804, a: 1}
+  - BodySprite: {fileID: 21300000, guid: 51e2a399831333b478ec978ee598bf0e, type: 3}
+    EyesTintColor: {r: 0.9686275, g: 0.49803925, b: 0.454902, a: 1}
+  - BodySprite: {fileID: 21300006, guid: 51e2a399831333b478ec978ee598bf0e, type: 3}
+    EyesTintColor: {r: 0.49411768, g: 0.7960785, b: 0, a: 1}
+  - BodySprite: {fileID: 21300012, guid: 51e2a399831333b478ec978ee598bf0e, type: 3}
+    EyesTintColor: {r: 0.9686275, g: 0.96470594, b: 0.6156863, a: 1}
+  - BodySprite: {fileID: 21300016, guid: 51e2a399831333b478ec978ee598bf0e, type: 3}
+    EyesTintColor: {r: 1, g: 0.8745099, b: 0.627451, a: 1}

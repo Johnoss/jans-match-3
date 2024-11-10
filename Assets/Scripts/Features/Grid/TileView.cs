@@ -1,5 +1,6 @@
 using MVC;
 using UnityEngine;
+using UnityEngine.Serialization;
 using Zenject;
 
 namespace Scripts.Features.Grid
@@ -8,6 +9,9 @@ namespace Scripts.Features.Grid
     public class TileView : AbstractView
     {
         [SerializeField] private RectTransform _rectTransform;
+        [SerializeField] private RectTransform _pieceAnchor;
+        
+        public RectTransform PieceAnchor => _pieceAnchor;
         
         private int _entity;
         

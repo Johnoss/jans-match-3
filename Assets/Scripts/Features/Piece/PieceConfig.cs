@@ -1,16 +1,18 @@
 using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Scripts.Features.Piece
 {
     [CreateAssetMenu(menuName = "Create PieceConfig", fileName = "PieceConfig", order = 0)]
     public class PieceConfig : ScriptableObject
     {
+        [FormerlySerializedAs("_piecePrefab")]
         [Header("Piece")]
-        [SerializeField] private PieceView _piecePrefab;
+        [SerializeField] private PieceEntityView _pieceEntityPrefab;
         [SerializeField] private PieceSetting[] _pieceSettings;
         
-        public PieceView PiecePrefab => _piecePrefab;
+        public PieceEntityView PieceEntityPrefab => _pieceEntityPrefab;
         public int PieceTypesCount => _pieceSettings.Length;
         
         public PieceSetting GetPieceSetting(int pieceType)

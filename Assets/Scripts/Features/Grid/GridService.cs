@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using Leopotam.EcsLite;
 using MVC;
@@ -10,16 +9,19 @@ namespace Scripts.Features.Grid
 {
     public class GridService
     {
-        [Inject] private EcsWorld _world;
         [Inject] private GridConfig _gridConfig;
         
-        [Inject] private TileView.ViewFactory _tileViewFactory;
+        [Inject] private PieceService _pieceService;
         
-        [Inject] private ViewPool<PieceView> _pieceViewPool;
+        [Inject] private EcsWorld _world;
+        [Inject] private GridView _gridView;
+        
+        [Inject] private TileView.ViewFactory _tileViewFactory;
 
         private int[,] _tileEntities;
         public void SetupGrid()
         {
+            _gridView.SetupBoard();
             var gridEntity = _world.NewEntity();
             _world.GetPool<GridComponent>().Add(gridEntity) = new GridComponent();
             
@@ -33,8 +35,7 @@ namespace Scripts.Features.Grid
         {
             foreach (var tileEntity in _tileEntities)
             {
-                var viewLinkComponent = _world.GetPool<EntityModelLinkComponent>().Get(tileEntity);
-                _pieceViewPool.GetPooledOrNewView(-1, viewLinkComponent.ViewGameObject.transform);
+                _pieceService.CreateRandomPieceEntity(tileEntity);
             }
         }
 
@@ -57,9 +58,9 @@ namespace Scripts.Features.Grid
 
         private void CreateEntityViewLink(TileView tileView, int tileEntity)
         {
-            _world.GetPool<EntityModelLinkComponent>().Add(tileEntity) = new EntityModelLinkComponent()
+            _world.GetPool<TileViewLinkComponent>().Add(tileEntity) = new TileViewLinkComponent()
             {
-                ViewGameObject = tileView.gameObject,
+                TileView = tileView,
             };
         }
 

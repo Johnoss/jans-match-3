@@ -1,4 +1,5 @@
 using Scripts.Features.Grid;
+using Scripts.Features.Piece;
 using UnityEngine;
 using Zenject;
 
@@ -17,6 +18,9 @@ namespace Initialization
                 .AsSingle()
                 .WithArguments(_pooledObjectsParent)
                 .NonLazy();
+
+            Container.Bind<PieceService>().AsSingle();
+            
             Container.Bind<GridService>().AsSingle();
         }
     }

@@ -1,7 +1,8 @@
 ﻿namespace MVC
 {
-    public interface IPoolableView
+    public interface IPoolableEntityView
     {
+        void SetEntity(int entity);
         void ResetView();
         void DisableView();
     }
