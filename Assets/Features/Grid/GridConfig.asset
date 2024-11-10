@@ -9,7 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0364dfcb0e1f5244c9816876dba24576, type: 3}
-  m_Name: ConfigInstaller
+  m_Script: {fileID: 11500000, guid: 6c89509608d046339b1894ae27ea8c89, type: 3}
+  m_Name: GridConfig
   m_EditorClassIdentifier: 
-  _gridConfig: {fileID: 11400000, guid: aeef34eb0d8a91d46b6147800f0c87f0, type: 2}
+  _gridSize: {x: 5, y: 6}
+  _tileSize: {x: 100, y: 100}
+  _tilePrefab: {fileID: 6183156859451603534, guid: e892dff0c04088e4683dabff875716ba, type: 3}

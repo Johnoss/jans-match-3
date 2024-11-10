@@ -1,10 +1,16 @@
+using Scripts.Features.Grid;
 using UnityEngine;
 using Zenject;
 
-[CreateAssetMenu(fileName = "ConfigInstaller", menuName = "Installers/ConfigInstaller")]
-public class ConfigInstaller : ScriptableObjectInstaller<ConfigInstaller>
+namespace Initialization
 {
-    public override void InstallBindings()
+    public class ConfigInstaller : ScriptableObjectInstaller<ConfigInstaller>
     {
+        [SerializeField] private GridConfig _gridConfig;
+        
+        public override void InstallBindings()
+        {
+            Container.BindInstance(_gridConfig).AsSingle();
+        }
     }
 }
