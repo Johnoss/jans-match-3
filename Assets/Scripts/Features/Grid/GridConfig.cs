@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Scripts.Features.Grid
 {
@@ -6,8 +7,18 @@ namespace Scripts.Features.Grid
     public class GridConfig : ScriptableObject
     {
         [Header("Grid")]
-        [SerializeField] private Vector2Int _gridSize;
-        public Vector2Int GridSize => _gridSize;
+        [SerializeField] private Vector2Int _gridResolution;
+        [SerializeField] private Vector2Int[] _neighboringOffsets = new Vector2Int[]
+        {
+            new(0, 1),
+            new(1, 0),
+            new(0, -1),
+            new(-1, 0)
+        };
+        
+        public Vector2Int GridResolution => _gridResolution;
+        public Vector2Int[] NeighboringOffsets => _neighboringOffsets;
+        public int GridSize => _gridResolution.x * _gridResolution.y;
         
         [Header("Tile")]
         [SerializeField] private Vector2 _tileSize;

@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using Zenject;
 
 namespace Scripts.Features.Grid
 {
@@ -9,7 +8,7 @@ namespace Scripts.Features.Grid
         [Header("References")]
         [SerializeField] private GridLayoutGroup _gridLayoutGroup;
         
-        [Inject] private GridConfig _gridConfig;
+        private GridConfig _gridConfig;
 
         public Transform TilesParent => _gridLayoutGroup.transform;
     }

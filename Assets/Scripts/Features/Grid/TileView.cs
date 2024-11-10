@@ -1,10 +1,11 @@
+using MVC;
 using UnityEngine;
 using Zenject;
 
 namespace Scripts.Features.Grid
 {
     [RequireComponent(typeof(RectTransform))]
-    public class TileView : MonoBehaviour
+    public class TileView : AbstractView
     {
         [SerializeField] private RectTransform _rectTransform;
         
@@ -16,7 +17,7 @@ namespace Scripts.Features.Grid
             _entity = entity;
         }
         
-        public class TileFactory : PlaceholderFactory<int, TileView>
+        public class ViewFactory : PlaceholderFactory<int, TileView>
         {
         }
     }
