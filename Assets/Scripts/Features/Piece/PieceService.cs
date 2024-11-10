@@ -1,6 +1,7 @@
 using Leopotam.EcsLite;
 using MVC;
 using Scripts.Features.Grid;
+using Scripts.Features.Input;
 using Scripts.Utils;
 using UnityEngine;
 using Zenject;
@@ -31,7 +32,12 @@ namespace Scripts.Features.Piece
             LinkTileAndPiece(tileEntity, pieceEntity);
 
             
-            CreatePieceView(pieceEntity, pieceTypeIndex, tileEntity);
+            var pieceView = CreatePieceView(pieceEntity, pieceTypeIndex, tileEntity);
+            
+            _world.GetPool<PieceViewLinkComponent>().Add(pieceEntity) = new PieceViewLinkComponent()
+            {
+                View = pieceView,
+            };
             
             
             return pieceEntity;
@@ -39,7 +45,7 @@ namespace Scripts.Features.Piece
 
         private PieceEntityView CreatePieceView(int pieceEntity, int pieceTypeIndex, int tileEntity)
         {
-            var tileView = _world.GetPool<TileViewLinkComponent>().Get(tileEntity).TileView;
+            var tileView = _world.GetPool<TileViewLinkComponent>().Get(tileEntity).View;
             var view = _pieceEntityViewPool.GetPooledOrNewView(pieceEntity, tileView.PieceAnchor);
 
             return view;

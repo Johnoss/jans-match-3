@@ -4,6 +4,6 @@ namespace Scripts.Features.Grid
 {
     public struct TileViewLinkComponent
     {
-        public TileView TileView;
+        public TileView View;
     }
 }

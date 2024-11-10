@@ -1,6 +1,8 @@
 using Leopotam.EcsLite;
 using MVC;
 using Scripts.Features.Grid;
+using UniRx;
+using UniRx.Triggers;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -24,6 +26,8 @@ namespace Scripts.Features.Piece
         
         private PieceSetting _pieceSetting;
 
+        public RectTransform RectTransform => _rectTransform;
+
         [Inject]
         public void Construct(int entity, PieceConfig pieceConfig, GridConfig gridConfig, EntityViewPool<PieceEntityView> entityViewPool, EcsWorld world)
         {
@@ -33,7 +37,7 @@ namespace Scripts.Features.Piece
             _entityViewPool = entityViewPool;
             _world = world;
         }
-        
+
         private void SetupVisuals()
         {
             var pieceTypeComponent = _world.GetPool<PieceTypeComponent>().Get(_entity);
@@ -41,6 +45,8 @@ namespace Scripts.Features.Piece
             _pieceSetting = _pieceConfig.GetPieceSetting(pieceTypeComponent.TypeIndex);
             
             _bodyImage.sprite = _pieceSetting.BodySprite;
+            _eyesImage.sprite = _pieceSetting.EyesSprite;
+            _mouthImage.sprite = _pieceSetting.MouthSprite;
             _eyesImage.color = _pieceSetting.EyesTintColor;
         }
 

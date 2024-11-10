@@ -41,12 +41,12 @@ namespace Scripts.Features.Grid
 
         private void CreateTiles()
         {
-            for (var x = 0; x < _gridConfig.GridResolution.x; x++)
+            for (var row = 0; row < _gridConfig.GridResolution.y; row++)
             {
-                for (var y = 0; y < _gridConfig.GridResolution.y; y++)
+                for (var column = 0; column < _gridConfig.GridResolution.x; column++)
                 {
-                    var tileEntity = CreateTileEntity(new Vector2Int(x, y));
-                    _tileEntities[x, y] = tileEntity;
+                    var tileEntity = CreateTileEntity(new Vector2Int(column, row));
+                    _tileEntities[column, row] = tileEntity;
                     
                     var tileView = _tileViewFactory.Create(tileEntity);
                     
@@ -60,24 +60,24 @@ namespace Scripts.Features.Grid
         {
             _world.GetPool<TileViewLinkComponent>().Add(tileEntity) = new TileViewLinkComponent()
             {
-                TileView = tileView,
+                View = tileView,
             };
         }
 
         private void SetupNeighbours()
         {
-            for (var x = 0; x < _gridConfig.GridResolution.x; x++)
+            for (var column = 0; column < _gridConfig.GridResolution.x; column++)
             {
-                for (var y = 0; y < _gridConfig.GridResolution.y; y++)
+                for (var row = 0; row < _gridConfig.GridResolution.y; row++)
                 {
-                    SetupNeighbour(x, y);
+                    SetupNeighbour(column, row);
                 }
             }
         }
 
-        private void SetupNeighbour(int x, int y)
+        private void SetupNeighbour(int column, int row)
         {
-            var tileEntity = _tileEntities[x, y];
+            var tileEntity = _tileEntities[column, row];
             var tileComponent = _world.GetPool<TileComponent>().Get(tileEntity);
             var neighboringTileEntities = tileComponent.NeighboringTileCoordinates
                 .Select(neighborCoordinate => _tileEntities[neighborCoordinate.x, neighborCoordinate.y]).ToArray();
@@ -104,6 +104,14 @@ namespace Scripts.Features.Grid
             };
             
             return entity;
+        }
+
+        public bool AreNeighbours(int interactedTileA, int interactedTileB)
+        {
+            var tileA = _world.GetPool<TileComponent>().Get(interactedTileA);
+            var tileB = _world.GetPool<TileComponent>().Get(interactedTileB);
+
+            return tileA.NeighboringTileCoordinates.Contains(tileB.Coordinates);
         }
     }
 }

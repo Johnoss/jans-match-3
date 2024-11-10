@@ -8,7 +8,7 @@ namespace Initialization.ECS
         public override void InstallBindings()
         {
             Container.Bind<EcsWorld>().AsSingle();
-            Container.Bind<ECSIntializer>().AsSingle().NonLazy();
+            Container.Bind<ECSInitializer>().AsSingle().NonLazy();
         }
     }
 }

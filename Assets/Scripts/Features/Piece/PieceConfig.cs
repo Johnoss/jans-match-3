@@ -25,6 +25,8 @@ namespace Scripts.Features.Piece
     public class PieceSetting
     {
         public Sprite BodySprite;
+        public Sprite MouthSprite;
+        public Sprite EyesSprite;
         public Color EyesTintColor;
     }
 }
