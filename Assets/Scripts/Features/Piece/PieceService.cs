@@ -3,7 +3,6 @@ using MVC;
 using Scripts.Features.Grid;
 using Scripts.Features.Input;
 using Scripts.Utils;
-using UnityEngine;
 using Zenject;
 
 namespace Scripts.Features.Piece
@@ -23,18 +22,17 @@ namespace Scripts.Features.Piece
 
             var pieceTypeIndex = RandomUtils.GetRandomInt(_pieceConfig.PieceTypesCount);
             
-            _world.GetPool<PieceTypeComponent>().Add(pieceEntity) = new PieceTypeComponent()
+            _world.GetPool<PieceTypeComponent>().Add(pieceEntity) = new PieceTypeComponent
             {
                 TypeIndex = pieceTypeIndex,
             };
             
             _world.GetPool<PieceComponent>().Add(pieceEntity) = new PieceComponent();
             LinkTileAndPiece(tileEntity, pieceEntity);
-
             
-            var pieceView = CreatePieceView(pieceEntity, pieceTypeIndex, tileEntity);
+            var pieceView = CreatePieceView(pieceEntity, tileEntity);
             
-            _world.GetPool<PieceViewLinkComponent>().Add(pieceEntity) = new PieceViewLinkComponent()
+            _world.GetPool<PieceViewLinkComponent>().Add(pieceEntity) = new PieceViewLinkComponent
             {
                 View = pieceView,
             };
@@ -43,7 +41,7 @@ namespace Scripts.Features.Piece
             return pieceEntity;
         }
 
-        private PieceEntityView CreatePieceView(int pieceEntity, int pieceTypeIndex, int tileEntity)
+        private PieceEntityView CreatePieceView(int pieceEntity, int tileEntity)
         {
             var tileView = _world.GetPool<TileViewLinkComponent>().Get(tileEntity).View;
             var view = _pieceEntityViewPool.GetPooledOrNewView(pieceEntity, tileView.PieceAnchor);
@@ -53,12 +51,12 @@ namespace Scripts.Features.Piece
 
         private void LinkTileAndPiece(int tileEntity, int pieceEntity)
         {
-            _world.GetPool<PieceTileLinkComponent>().Add(pieceEntity) = new PieceTileLinkComponent()
+            _world.GetPool<PieceTileLinkComponent>().Add(pieceEntity) = new PieceTileLinkComponent
             {
                 LinkedEntity = tileEntity,
             };
 
-            _world.GetPool<PieceTileLinkComponent>().Add(tileEntity) = new PieceTileLinkComponent()
+            _world.GetPool<PieceTileLinkComponent>().Add(tileEntity) = new PieceTileLinkComponent
             {
                 LinkedEntity = pieceEntity,
             };

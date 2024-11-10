@@ -1,6 +1,6 @@
 using System.Linq;
 using Leopotam.EcsLite;
-using MVC;
+using Scripts.Features.Grid.Matching;
 using Scripts.Features.Piece;
 using UnityEngine;
 using Zenject;
@@ -12,6 +12,7 @@ namespace Scripts.Features.Grid
         [Inject] private GridConfig _gridConfig;
         
         [Inject] private PieceService _pieceService;
+        [Inject] private MatchingService _matchingService;
         
         [Inject] private EcsWorld _world;
         [Inject] private GridView _gridView;
@@ -112,6 +113,11 @@ namespace Scripts.Features.Grid
             var tileB = _world.GetPool<TileComponent>().Get(interactedTileB);
 
             return tileA.NeighboringTileCoordinates.Contains(tileB.Coordinates);
+        }
+
+        public int GetTileEntity(Vector2Int coordinates)
+        {
+            return _tileEntities[coordinates.x, coordinates.y];
         }
     }
 }

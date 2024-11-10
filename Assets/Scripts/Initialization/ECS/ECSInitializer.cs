@@ -1,6 +1,7 @@
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
 using Scripts.Features.Grid;
+using Scripts.Features.Grid.Matching;
 using Scripts.Features.Input;
 using UniRx;
 using Zenject;
@@ -12,6 +13,7 @@ namespace Initialization.ECS
         [Inject] private EcsWorld _world;
         
         [Inject] private GridService _gridService;
+        [Inject] private MatchingService _matchingService;
         
         private EcsSystems _systems;
         
@@ -23,6 +25,7 @@ namespace Initialization.ECS
             _systems
                 .Add(new InputSystem())
                 .Add(new SwapPiecesSystem())
+                .Add(new MatchSystem())
 #if UNITY_EDITOR
                 .Add(new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem(null, true, entityNameFormat: "D"))
 #endif
@@ -37,7 +40,8 @@ namespace Initialization.ECS
         {
             return new object[]
             {
-                _gridService
+                _gridService,
+                _matchingService,
             };
         }
         

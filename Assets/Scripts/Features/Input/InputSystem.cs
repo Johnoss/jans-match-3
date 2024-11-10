@@ -1,10 +1,8 @@
 using System.Collections.Generic;
-using System.Linq;
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
 using Scripts.Features.Grid;
 using Scripts.Features.Piece;
-using UnityEngine;
 
 namespace Scripts.Features.Input
 {
@@ -63,8 +61,6 @@ namespace Scripts.Features.Input
             {
                 _userInteractingPool.Value.Del(entity);
             }
-            
-            Debug.Log("Clearing interaction");
         }
         
         private void TrySwapTiles()
@@ -92,7 +88,6 @@ namespace Scripts.Features.Input
                 TargetEntity = originTileEntity,
             };
             
-            Debug.Log($"Swapping tiles {originTileEntity} and {targetTileEntity}");
             ClearInteraction();
         }
     }

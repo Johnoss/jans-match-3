@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _gridConfig: {fileID: 11400000, guid: aeef34eb0d8a91d46b6147800f0c87f0, type: 2}
   _pieceConfig: {fileID: 11400000, guid: a43b163b19d1db342a6e9b4d2bcddc6d, type: 2}
+  _rulesConfig: {fileID: 11400000, guid: 802ce4507e137874c8d6e83ac739ed1c, type: 2}

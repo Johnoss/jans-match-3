@@ -1,4 +1,5 @@
 using Scripts.Features.Grid;
+using Scripts.Features.Grid.Matching;
 using Scripts.Features.Piece;
 using UnityEngine;
 using Zenject;
@@ -22,6 +23,7 @@ namespace Initialization
             Container.Bind<PieceService>().AsSingle();
             
             Container.Bind<GridService>().AsSingle();
+            Container.Bind<MatchingService>().AsSingle();
         }
     }
 }

@@ -53,7 +53,6 @@ namespace Scripts.Features.Grid
             {
                 return;
             }
-            Debug.Log($"Piece {_entity} entered");
             _userInteractingPool.Add(_entity) = new UserInteractingComponent();
         }
         

@@ -1,6 +1,7 @@
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
 using Scripts.Features.Grid;
+using Scripts.Features.Grid.Matching;
 using Scripts.Features.Piece;
 using UnityEngine;
 
@@ -12,6 +13,7 @@ namespace Scripts.Features.Input
         
         private readonly EcsPoolInject<TileViewLinkComponent> _tileViewLinkPool;
         private readonly EcsPoolInject<PieceTileLinkComponent> _pieceTileLinkPool;
+        private readonly EcsPoolInject<MoveCompleteComponent> _moveCompletePool;
         
         public void Run(EcsSystems systems)
         {
@@ -39,6 +41,8 @@ namespace Scripts.Features.Input
                 var pieceView = pieceViewLinkComponent.View;
                 pieceView.transform.SetParent(tileViewLinkComponent.View.PieceAnchor);
                 pieceView.RectTransform.anchoredPosition = Vector2.zero;
+                
+                _moveCompletePool.Value.Add(pieceEntity) = new MoveCompleteComponent();
             }
         }
     }
