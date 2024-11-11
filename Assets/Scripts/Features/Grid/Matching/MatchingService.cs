@@ -16,40 +16,9 @@ namespace Scripts.Features.Grid.Matching
         [Inject] private RulesConfig _rulesConfig;
         [Inject] private EcsWorld _world;
         
-        public HashSet<Vector2Int> GetMatchingPatternCoordinates(Vector2Int[] pattern)
+        public HashSet<Vector2Int> FindMatches(Vector2Int[] candidateCoordinates)
         {
-            var legalMatchesCoordinates = new HashSet<Vector2Int>();
-
-            foreach (var legalPattern in _rulesConfig.LegalPatternSettings)
-            {
-                var matchedCoordinates = FindPatternMatches(pattern, legalPattern);
-                foreach (var coordinates in matchedCoordinates)
-                {
-                    legalMatchesCoordinates.Add(coordinates);
-                }
-            }
-
-            return legalMatchesCoordinates;
-        }
-
-        private IEnumerable<Vector2Int> FindPatternMatches(Vector2Int[] pattern, PatternSetting legalPattern)
-        {
-            for (var i = 0; i <= pattern.Length - legalPattern.Pattern.Length; i++)
-            {
-                
-                var subPattern = pattern.Skip(i).Take(legalPattern.Pattern.Length).ToArray();
-                var offset = subPattern.GetOffset();
-                subPattern = subPattern.NormalizePattern(offset);
-
-                if (!subPattern.SequenceEqual(legalPattern.Pattern))
-                {
-                    continue;
-                }
-                foreach (var coordinates in subPattern)
-                {
-                    yield return coordinates;
-                }
-            }
+            return MatchUtils.FindMatches(candidateCoordinates, _rulesConfig);
         }
         
         public Vector2Int[] GetMatchingCandidates(int tileEntity)
@@ -75,7 +44,7 @@ namespace Scripts.Features.Grid.Matching
             GetMatchingNeighboursRecursive(coordinates, pieceType, visited, matchingNeighboursCoordinates);
 
             //TODO remove
-            if (matchingNeighboursCoordinates.Count > _rulesConfig.MinPatternLength)
+            if (matchingNeighboursCoordinates.Count >= _rulesConfig.MinMatchLength)
             {
                 Debug.Log($"Matching neighbours coordinates: {string.Join(", ", matchingNeighboursCoordinates)}");
             }

@@ -25,7 +25,7 @@ namespace Scripts.Features.Grid.Matching
                     continue;
                 }
                 
-                var legalMatches = _matchingService.Value.GetMatchingPatternCoordinates(matchingNeighbours);
+                var legalMatches = _matchingService.Value.FindMatches(matchingNeighbours);
                 Debug.Log($"Legal matches for tile {tileEntity}: {legalMatches.Count}");
             }
             
