@@ -1,8 +1,13 @@
+using System.Collections.Generic;
+using System.Linq;
+using Initialization.ECS;
 using Leopotam.EcsLite;
 using MVC;
 using Scripts.Features.Grid;
 using Scripts.Features.Input;
+using Scripts.Features.Spawning;
 using Scripts.Utils;
+using UnityEngine;
 using Zenject;
 
 namespace Scripts.Features.Piece
@@ -37,6 +42,15 @@ namespace Scripts.Features.Piece
                 View = pieceView,
             };
             
+            _world.GetPool<PoolableViewComponent>().Add(pieceEntity) = new PoolableViewComponent()
+            {
+                PoolableEntityView = pieceView,
+            };
+            
+            _world.GetPool<ViewComponent>().Add(pieceEntity) = new ViewComponent()
+            {
+                View = pieceView,
+            };
             
             return pieceEntity;
         }
@@ -61,10 +75,5 @@ namespace Scripts.Features.Piece
                 LinkedEntity = pieceEntity,
             };
         }
-    }
-    
-    public struct PieceTypeComponent
-    {
-        public int TypeIndex;
     }
 }

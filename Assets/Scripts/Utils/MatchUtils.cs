@@ -10,7 +10,7 @@ namespace Scripts.Utils
         public static HashSet<Vector2Int> FindMatches(Vector2Int[] candidateCoordinates, RulesConfig rulesConfig)
         {
             var minLineLength = rulesConfig.MinMatchLength;
-            var grid = candidateCoordinates.ConvertToGrid(out var width, out var height);
+            var grid = candidateCoordinates.ConvertToGrid(out var width, out var height, out Vector2Int offset);
 
             var matches = new HashSet<Vector2Int>();
 
@@ -21,16 +21,20 @@ namespace Scripts.Utils
                 matches.UnionWith(FindSquareMatches(grid, width, height));
             }
 
+            matches = matches.Select(match => match + offset).ToHashSet();
+
             return matches;
         }
 
-        private static int[,] ConvertToGrid(this Vector2Int[] candidateCoordinates, out int width, out int height)
+        private static int[,] ConvertToGrid(this Vector2Int[] candidateCoordinates, out int width, out int height, out Vector2Int offset)
         {
             var minX = candidateCoordinates.Min(coord => coord.x);
             var minY = candidateCoordinates.Min(coord => coord.y);
             var maxX = candidateCoordinates.Max(coord => coord.x);
             var maxY = candidateCoordinates.Max(coord => coord.y);
 
+            offset = new Vector2Int(minX, minY);
+            
             width = maxX - minX + 1;
             height = maxY - minY + 1;
 

@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
 using Scripts.Features.Piece;
@@ -5,10 +6,14 @@ using UnityEngine;
 
 namespace Scripts.Features.Grid.Matching
 {
-    public class MatchSystem : IEcsRunSystem
+    public class DetermineMatchesSystem : IEcsRunSystem
     {
         private EcsFilterInject<Inc<MoveCompleteComponent, PieceComponent, PieceTileLinkComponent>> _moveCompleteFilter;
+        
         private EcsCustomInject<MatchingService> _matchingService;
+        private EcsCustomInject<GridService> _gridService;
+
+        private EcsPoolInject<IsMatchComponent> _isMatchPool;
         
         public void Run(EcsSystems systems)
         {
@@ -25,10 +30,17 @@ namespace Scripts.Features.Grid.Matching
                     continue;
                 }
                 
-                var legalMatches = _matchingService.Value.FindMatches(matchingNeighbours);
-                Debug.Log($"Legal matches for tile {tileEntity}: {legalMatches.Count}");
+                var legalMatches = _matchingService.Value.FindMatchesCoordinates(matchingNeighbours);
+                MarkMatchedPieces(_gridService.Value.GetPieceEntitiesAtCoordinates(legalMatches));
             }
-            
+        }
+
+        private void MarkMatchedPieces(HashSet<int> getPieceEntitiesAtCoordinates)
+        {
+            foreach (var pieceEntity in getPieceEntitiesAtCoordinates)
+            {
+                _isMatchPool.Value.Add(pieceEntity) = new IsMatchComponent();
+            }
         }
     }
 }

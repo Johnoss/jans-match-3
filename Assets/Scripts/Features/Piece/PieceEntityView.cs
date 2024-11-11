@@ -10,7 +10,7 @@ using Zenject;
 namespace Scripts.Features.Piece
 {
     [RequireComponent(typeof(RectTransform))]
-    public class PieceEntityView : AbstractView, IPoolableEntityView
+    public class PieceEntityView : PoolableEntityView
     {
         [Header("References")]
         [SerializeField] private RectTransform _rectTransform;
@@ -18,7 +18,6 @@ namespace Scripts.Features.Piece
         [SerializeField] private Image _eyesImage;
         [SerializeField] private Image _mouthImage;
         
-        private int _entity;
         private EntityViewPool<PieceEntityView> _entityViewPool;
         private PieceConfig _pieceConfig;
         private GridConfig _gridConfig;
@@ -31,7 +30,7 @@ namespace Scripts.Features.Piece
         [Inject]
         public void Construct(int entity, PieceConfig pieceConfig, GridConfig gridConfig, EntityViewPool<PieceEntityView> entityViewPool, EcsWorld world)
         {
-            _entity = entity;
+            SetEntity(entity);
             _pieceConfig = pieceConfig;
             _gridConfig = gridConfig;
             _entityViewPool = entityViewPool;
@@ -40,7 +39,7 @@ namespace Scripts.Features.Piece
 
         private void SetupVisuals()
         {
-            var pieceTypeComponent = _world.GetPool<PieceTypeComponent>().Get(_entity);
+            var pieceTypeComponent = _world.GetPool<PieceTypeComponent>().Get(Entity);
             _rectTransform.sizeDelta = _gridConfig.TileSize;
             _pieceSetting = _pieceConfig.GetPieceSetting(pieceTypeComponent.TypeIndex);
             
@@ -50,12 +49,7 @@ namespace Scripts.Features.Piece
             _eyesImage.color = _pieceSetting.EyesTintColor;
         }
 
-        public void SetEntity(int entity)
-        {
-            _entity = entity;
-        }
-
-        public void ResetView()
+        public override void ResetView()
         {
             _mouthImage.overrideSprite = null;
             _eyesImage.overrideSprite = null;
@@ -66,7 +60,7 @@ namespace Scripts.Features.Piece
             SetupVisuals();
         }
 
-        public void DisableView()
+        public override void DisableView()
         {
         }
 

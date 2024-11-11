@@ -1,7 +1,10 @@
+using System.Collections.Generic;
 using System.Linq;
+using Initialization.ECS;
 using Leopotam.EcsLite;
 using Scripts.Features.Grid.Matching;
 using Scripts.Features.Piece;
+using Scripts.Features.Spawning;
 using UnityEngine;
 using Zenject;
 
@@ -32,6 +35,34 @@ namespace Scripts.Features.Grid
             PopulateTiles();
         }
 
+        public bool AreNeighbours(int interactedTileA, int interactedTileB)
+        {
+            var tileA = _world.GetPool<TileComponent>().Get(interactedTileA);
+            var tileB = _world.GetPool<TileComponent>().Get(interactedTileB);
+
+            return tileA.NeighboringTileCoordinates.Contains(tileB.Coordinates);
+        }
+        
+        public HashSet<int> GetPieceEntitiesAtCoordinates(HashSet<Vector2Int> coordinates)
+        {
+            return coordinates
+                .Select(GetPieceEntity)
+                .Where(pieceEntity => pieceEntity != ECSTypes.NULL).ToHashSet();
+        }
+
+        public int GetTileEntity(Vector2Int coordinates)
+        {
+            return _tileEntities[coordinates.x, coordinates.y];
+        }
+
+        public int GetPieceEntity(Vector2Int coordinates)
+        {
+            var tileEntity = _tileEntities[coordinates.x, coordinates.y];
+            return !_world.GetPool<PieceTileLinkComponent>().Has(tileEntity)
+                ? ECSTypes.NULL
+                : _world.GetPool<PieceTileLinkComponent>().Get(tileEntity).LinkedEntity;
+        }
+
         private void PopulateTiles()
         {
             foreach (var tileEntity in _tileEntities)
@@ -52,6 +83,11 @@ namespace Scripts.Features.Grid
                     var tileView = _tileViewFactory.Create(tileEntity);
                     
                     CreateEntityViewLink(tileView, tileEntity);
+                    
+                    _world.GetPool<ViewComponent>().Add(tileEntity) = new ViewComponent()
+                    {
+                        View = tileView,
+                    };
                 }
             }
             SetupNeighbours();
@@ -105,19 +141,6 @@ namespace Scripts.Features.Grid
             };
             
             return entity;
-        }
-
-        public bool AreNeighbours(int interactedTileA, int interactedTileB)
-        {
-            var tileA = _world.GetPool<TileComponent>().Get(interactedTileA);
-            var tileB = _world.GetPool<TileComponent>().Get(interactedTileB);
-
-            return tileA.NeighboringTileCoordinates.Contains(tileB.Coordinates);
-        }
-
-        public int GetTileEntity(Vector2Int coordinates)
-        {
-            return _tileEntities[coordinates.x, coordinates.y];
         }
     }
 }

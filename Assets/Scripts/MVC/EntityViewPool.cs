@@ -9,7 +9,7 @@ namespace MVC
 {
     [UsedImplicitly]
     public class EntityViewPool<TView>
-        where TView : AbstractView, IPoolableEntityView
+        where TView : PoolableEntityView
     {
         private readonly Queue<TView> _views = new();
 
@@ -27,21 +27,23 @@ namespace MVC
             }
         }
 
-        public TView GetPooledOrNewView(int entity, Transform parent, bool worldPositionStays = false)
+        public TView GetPooledOrNewView(int entity, Transform parent)
         {
             var view = _views.Any() ? _views.Dequeue() : _viewFactory.Create(entity);
-            view.transform.SetParent(parent, worldPositionStays);
+            view.SetParent(parent);
             view.SetEntity(entity);
             view.ResetView();
             return view;
         }
 
-        private void AddView(TView view)
+        public void AddView(TView view)
         {
-            view.transform.SetParent(_pooledObjectsParent);
+            view.SetParent(_pooledObjectsParent);
             view.SetEntity(ECSTypes.NULL);
             view.DisableView();
             _views.Enqueue(view);
+            
+            //TODO dispose subscriptions
         }
     }
 }

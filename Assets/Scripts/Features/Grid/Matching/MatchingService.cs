@@ -16,7 +16,7 @@ namespace Scripts.Features.Grid.Matching
         [Inject] private RulesConfig _rulesConfig;
         [Inject] private EcsWorld _world;
         
-        public HashSet<Vector2Int> FindMatches(Vector2Int[] candidateCoordinates)
+        public HashSet<Vector2Int> FindMatchesCoordinates(Vector2Int[] candidateCoordinates)
         {
             return MatchUtils.FindMatches(candidateCoordinates, _rulesConfig);
         }
