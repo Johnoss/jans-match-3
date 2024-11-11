@@ -49,6 +49,11 @@ namespace Scripts.Features.Piece
             _eyesImage.color = _pieceSetting.EyesTintColor;
         }
 
+        public override void ReturnToPool()
+        {
+            _entityViewPool.AddView(this);
+        }
+
         public override void ResetView()
         {
             _mouthImage.overrideSprite = null;

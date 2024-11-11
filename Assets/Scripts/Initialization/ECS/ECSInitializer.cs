@@ -15,7 +15,6 @@ namespace Initialization.ECS
         
         [Inject] private GridService _gridService;
         [Inject] private MatchingService _matchingService;
-        [Inject] private PoolService _poolService;
         
         private EcsSystems _systems;
         
@@ -47,7 +46,6 @@ namespace Initialization.ECS
                 _world,
                 _gridService,
                 _matchingService,
-                _poolService,
             };
         }
         

@@ -4,7 +4,10 @@ namespace MVC
 {
     public abstract class PoolableEntityView : AbstractView
     {
-        protected int Entity; 
+        protected int Entity;
+
+        public abstract void ReturnToPool();
+        
         public void SetEntity(int entity)
         {
             Entity = entity;

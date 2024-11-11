@@ -24,7 +24,6 @@ namespace Initialization
             Container.Bind<PieceService>().AsSingle();
             Container.Bind<GridService>().AsSingle();
             Container.Bind<MatchingService>().AsSingle();
-            Container.Bind<PoolService>().AsSingle();
         }
     }
 }

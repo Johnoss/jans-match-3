@@ -12,7 +12,6 @@ namespace Scripts.Features.Spawning
         
         private EcsPoolInject<PoolableViewComponent> _poolableViewComponentPool;
         
-        private EcsCustomInject<PoolService> _poolService;
         private EcsCustomInject<EcsWorld> _world;
         
         public void Run(EcsSystems systems)
@@ -43,10 +42,7 @@ namespace Scripts.Features.Spawning
             var poolableViewComponent = _poolableViewComponentPool.Value.Get(entity);
 
             var view = poolableViewComponent.PoolableEntityView;
-            if (!_poolService.Value.TryAddToPool(view))
-            {
-                DestroyView(view);
-            }
+            view.ReturnToPool();
         }
 
         private static void DestroyView(AbstractView view)
