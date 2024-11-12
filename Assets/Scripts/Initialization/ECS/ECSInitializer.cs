@@ -2,6 +2,7 @@ using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
 using Scripts.Features.Grid;
 using Scripts.Features.Grid.Matching;
+using Scripts.Features.Grid.Moving;
 using Scripts.Features.Input;
 using Scripts.Features.Spawning;
 using UniRx;
@@ -26,6 +27,9 @@ namespace Initialization.ECS
             _systems
                 .Add(new InputSystem())
                 .Add(new SwapPiecesSystem())
+                .Add(new SetupFallSystem())
+                .Add(new ExecuteFallSystem())
+                .Add(new MovePieceToTileSystem())
                 .Add(new DetermineMatchesSystem())
                 .Add(new CollectMatchesSystem())
                 .Add(new DestroyEntitySystem())

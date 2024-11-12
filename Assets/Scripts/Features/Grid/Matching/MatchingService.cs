@@ -43,17 +43,7 @@ namespace Scripts.Features.Grid.Matching
             var visited = new HashSet<Vector2Int>();
             GetMatchingNeighboursRecursive(coordinates, pieceType, visited, matchingNeighboursCoordinates);
 
-            //TODO remove
-            if (matchingNeighboursCoordinates.Count >= _rulesConfig.MinMatchLength)
-            {
-                Debug.Log($"Matching neighbours coordinates: {string.Join(", ", matchingNeighboursCoordinates)}");
-            }
-            else
-            {
-                return Array.Empty<Vector2Int>();
-            }
-            
-            return matchingNeighboursCoordinates.ToArray();
+            return matchingNeighboursCoordinates.Count >= _rulesConfig.MinMatchLength ? matchingNeighboursCoordinates.ToArray() : Array.Empty<Vector2Int>();
         }
 
         private void GetMatchingNeighboursRecursive(Vector2Int coordinates, int pieceType, HashSet<Vector2Int> visited, HashSet<Vector2Int> matchingNeighbours)

@@ -3,6 +3,7 @@ using System.Linq;
 using Initialization.ECS;
 using Leopotam.EcsLite;
 using Scripts.Features.Grid.Matching;
+using Scripts.Features.Grid.Moving;
 using Scripts.Features.Piece;
 using Scripts.Features.Spawning;
 using UnityEngine;
@@ -55,12 +56,94 @@ namespace Scripts.Features.Grid
             return _tileEntities[coordinates.x, coordinates.y];
         }
 
-        public int GetPieceEntity(Vector2Int coordinates)
+        public int GetPieceEntity(int column, int row)
         {
-            var tileEntity = _tileEntities[coordinates.x, coordinates.y];
+            var tileEntity = _tileEntities[column, row];
             return !_world.GetPool<PieceTileLinkComponent>().Has(tileEntity)
                 ? ECSTypes.NULL
                 : _world.GetPool<PieceTileLinkComponent>().Get(tileEntity).LinkedEntity;
+        }
+        
+        public int GetPieceEntity(Vector2Int coordinates)
+        {
+            return GetPieceEntity(coordinates.x, coordinates.y);
+        }
+
+        public HashSet<int> GetPiecesToFall(Vector2Int tileComponentCoordinates)
+        {
+            var column = tileComponentCoordinates.x;
+            var startingRow = tileComponentCoordinates.y;
+            var piecesAbove = new HashSet<int>();
+            for (var row = startingRow + 1; row < _gridConfig.GridResolution.y; row++)
+            {
+                var pieceEntity = GetPieceEntity(column, row);
+                if (pieceEntity == ECSTypes.NULL || _world.GetPool<IsFallingComponent>().Has(pieceEntity))
+                {
+                    continue;
+                }
+                
+                piecesAbove.Add(pieceEntity);
+            }
+
+            return piecesAbove;
+        }
+        
+        public int GetFallDistance(HashSet<int> piecesToFall, Vector2Int emptyTileCoordinates)
+        {
+            var bottomPieceY = piecesToFall
+                .Select(GetPieceCoordinates)
+                .Min(pieceCoordinates => pieceCoordinates.y);
+            
+            Debug.Log($"Bottom piece Y: {bottomPieceY}, fall distance: {bottomPieceY - emptyTileCoordinates.y}");
+            
+            return bottomPieceY - emptyTileCoordinates.y;
+        }
+
+        public Vector2Int GetPieceCoordinates(int pieceEntity)
+        {
+            if (!_world.GetPool<PieceTileLinkComponent>().Has(pieceEntity))
+            {
+                Debug.LogError("Trying to get coordinates of a piece that is not linked to a tile");
+                return Vector2Int.zero;
+            }
+            
+            var pieceTile = _world.GetPool<PieceTileLinkComponent>().Get(pieceEntity).LinkedEntity;
+            return _world.GetPool<TileComponent>().Get(pieceTile).Coordinates;
+        }
+
+        public void SetTilePieceLink(int targetTileEntity, int pieceEntity)
+        {
+            //TODO GetOrCreate helper method
+            var pieceTileLinkPool = _world.GetPool<PieceTileLinkComponent>();
+            
+            //UnlinkPieceFromTile(pieceEntity);
+
+            ref var pieceToTileLink = ref !pieceTileLinkPool.Has(pieceEntity)
+                ? ref pieceTileLinkPool.Add(pieceEntity)
+                : ref pieceTileLinkPool.Get(pieceEntity);
+                
+            ref var tileToPieceLink = ref !pieceTileLinkPool.Has(targetTileEntity)
+                ? ref pieceTileLinkPool.Add(targetTileEntity)
+                : ref pieceTileLinkPool.Get(targetTileEntity);
+            
+            pieceToTileLink.LinkedEntity = targetTileEntity;
+            tileToPieceLink.LinkedEntity = pieceEntity;
+        }
+
+        public void UnlinkPieceFromTile(int pieceEntity)
+        {
+            var pieceTileLinkPool = _world.GetPool<PieceTileLinkComponent>();
+
+            if (!pieceTileLinkPool.Has(pieceEntity))
+            {
+                return;
+            }
+            
+            var currentTileEntity = pieceTileLinkPool.Get(pieceEntity).LinkedEntity;
+            if (pieceTileLinkPool.Has(currentTileEntity))
+            {
+                pieceTileLinkPool.Del(currentTileEntity);
+            }
         }
 
         private void PopulateTiles()
@@ -128,7 +211,7 @@ namespace Scripts.Features.Grid
         private int CreateTileEntity(Vector2Int coordinates)
         {
             var entity = _world.NewEntity();
-            
+
             //Check bounds and add valid neighbours
             var validNeighbours = _gridConfig.NeighboringOffsets
                 .Select(neighboringOffset => coordinates + neighboringOffset)
@@ -139,7 +222,7 @@ namespace Scripts.Features.Grid
                 Coordinates = coordinates,
                 NeighboringTileCoordinates = validNeighbours
             };
-            
+
             return entity;
         }
     }

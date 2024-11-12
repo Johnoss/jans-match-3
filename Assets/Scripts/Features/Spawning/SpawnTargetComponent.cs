@@ -1,6 +1,6 @@
 namespace Scripts.Features.Spawning
 {
-    public struct DestroyEntityCommand
+    public struct SpawnTargetComponent
     {
     }
 }

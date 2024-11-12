@@ -1,11 +1,13 @@
 using Leopotam.EcsLite;
 using MVC;
+using Scripts.Features.Grid.Matching;
 using Scripts.Features.Input;
+using Scripts.Features.Piece;
 using TMPro;
 using UniRx;
 using UniRx.Triggers;
 using UnityEngine;
-using UnityEngine.Serialization;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Zenject;
 
@@ -18,7 +20,7 @@ namespace Scripts.Features.Grid
         [SerializeField] private RectTransform _pieceAnchor;
         
         [Header("Interaction")]
-        [SerializeField] private GraphicRaycaster _hitbox;
+        [SerializeField] private Button _hitbox;
         
         [Header("Debug")]
         [SerializeField] private TextMeshProUGUI _debugText;
@@ -27,18 +29,23 @@ namespace Scripts.Features.Grid
         
         private int _entity;
         private EcsPool<UserInteractingComponent> _userInteractingPool;
+        private EcsWorld _world;
 
         [Inject]
         public void Construct(int entity, GridConfig gridConfig, EcsWorld world)
         {
             _entity = entity;
+            _world = world;
             _userInteractingPool = world.GetPool<UserInteractingComponent>();
 
             //TODO disposer
             _hitbox.OnPointerEnterAsObservable()
+                .Merge(_hitbox.OnPointerDownAsObservable())
                 .Subscribe(_ => OnPieceSelected());
+            
+            _hitbox.OnPointerUpAsObservable().Subscribe(OnPieceClicked);
 
-#if UNITY_EDITOR
+#if UNITY_EDITOR || DEBUG
             var tilePool = world.GetPool<TileComponent>();
             var tileComponent = tilePool.Get(_entity);
             _debugText.text = $"[{tileComponent.Coordinates.x}, {tileComponent.Coordinates.y}]";
@@ -46,7 +53,7 @@ namespace Scripts.Features.Grid
             _debugText.gameObject.SetActive(false);
 #endif
         }
-        
+
         private void OnPieceSelected()
         {
             if (_userInteractingPool.Has(_entity))
@@ -54,6 +61,32 @@ namespace Scripts.Features.Grid
                 return;
             }
             _userInteractingPool.Add(_entity) = new UserInteractingComponent();
+        }
+
+        private void OnPieceClicked(PointerEventData pointerEventData)
+        {
+#if DEBUG
+            if(pointerEventData.button != PointerEventData.InputButton.Right)
+            {
+                return;
+            }
+            
+            if(!_world.GetPool<PieceTileLinkComponent>().Has(_entity))
+            {
+                Debug.Log($"Tile Right Clicked: {_entity}, no piece linked");
+                return;
+            }
+            
+            Debug.Log($"Tile Right Clicked: {_entity}, destroying piece");
+            var pieceEntity = _world.GetPool<PieceTileLinkComponent>().Get(_entity).LinkedEntity;
+            
+            var matchPool = _world.GetPool<IsMatchComponent>();
+            if(matchPool.Has(pieceEntity))
+            {
+                return;
+            }
+            matchPool.Add(pieceEntity);
+#endif
         }
         
         public class ViewFactory : PlaceholderFactory<int, TileView>

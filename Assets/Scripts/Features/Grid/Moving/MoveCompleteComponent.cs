@@ -1,4 +1,4 @@
-namespace Scripts.Features.Grid.Matching
+namespace Scripts.Features.Grid.Moving
 {
     public struct MoveCompleteComponent
     {

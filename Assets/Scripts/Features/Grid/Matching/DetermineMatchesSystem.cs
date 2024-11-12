@@ -1,8 +1,9 @@
 using System.Collections.Generic;
+using System.Linq;
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
+using Scripts.Features.Grid.Moving;
 using Scripts.Features.Piece;
-using UnityEngine;
 
 namespace Scripts.Features.Grid.Matching
 {
@@ -37,7 +38,7 @@ namespace Scripts.Features.Grid.Matching
 
         private void MarkMatchedPieces(HashSet<int> getPieceEntitiesAtCoordinates)
         {
-            foreach (var pieceEntity in getPieceEntitiesAtCoordinates)
+            foreach (var pieceEntity in getPieceEntitiesAtCoordinates.Where(pieceEntity => !_isMatchPool.Value.Has(pieceEntity)))
             {
                 _isMatchPool.Value.Add(pieceEntity) = new IsMatchComponent();
             }

@@ -75,6 +75,12 @@ namespace Scripts.Features.Input
                 return;
             }
             
+            if (!_pieceTileLinkPool.Value.Has(originTileEntity) || !_pieceTileLinkPool.Value.Has(targetTileEntity))
+            {
+                ClearInteraction();
+                return;
+            }
+            
             var originPieceEntity = _pieceTileLinkPool.Value.Get(originTileEntity).LinkedEntity;
             var targetPieceEntity = _pieceTileLinkPool.Value.Get(targetTileEntity).LinkedEntity;
             
