@@ -9,7 +9,7 @@ namespace Scripts.Features.Grid.Matching
 {
     public class DetermineMatchesSystem : IEcsRunSystem
     {
-        private EcsFilterInject<Inc<MoveCompleteComponent, PieceComponent, PieceTileLinkComponent>> _moveCompleteFilter;
+        private EcsFilterInject<Inc<ChangedPositionComponent, PieceComponent, PieceTileLinkComponent>> _moveCompleteFilter;
         
         private EcsCustomInject<MatchingService> _matchingService;
         private EcsCustomInject<GridService> _gridService;

@@ -4,6 +4,7 @@ using Scripts.Features.Grid;
 using Scripts.Features.Grid.Matching;
 using Scripts.Features.Grid.Moving;
 using Scripts.Features.Input;
+using Scripts.Features.Piece;
 using Scripts.Features.Spawning;
 using UniRx;
 using Zenject;
@@ -16,6 +17,7 @@ namespace Initialization.ECS
         
         [Inject] private GridService _gridService;
         [Inject] private MatchingService _matchingService;
+        [Inject] private PieceService _pieceService;
         
         private EcsSystems _systems;
         
@@ -33,6 +35,7 @@ namespace Initialization.ECS
                 .Add(new DetermineMatchesSystem())
                 .Add(new CollectMatchesSystem())
                 .Add(new DestroyEntitySystem())
+                .Add(new SpawnPieceSystem())
 #if UNITY_EDITOR
                 .Add(new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem(null, true, entityNameFormat: "D"))
 #endif
@@ -50,6 +53,7 @@ namespace Initialization.ECS
                 _world,
                 _gridService,
                 _matchingService,
+                _pieceService,
             };
         }
         

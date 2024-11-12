@@ -4,6 +4,8 @@ using Initialization.ECS;
 using Leopotam.EcsLite;
 using MVC;
 using Scripts.Features.Grid;
+using Scripts.Features.Grid.Matching;
+using Scripts.Features.Grid.Moving;
 using Scripts.Features.Input;
 using Scripts.Features.Spawning;
 using Scripts.Utils;
@@ -15,17 +17,26 @@ namespace Scripts.Features.Piece
     public class PieceService
     {
         [Inject] private PieceConfig _pieceConfig;
+        [Inject] private RulesConfig _rulesConfig;
         
         [Inject] private GridService _gridService;
+        [Inject] private MatchingService _matchingService;
         [Inject] private EcsWorld _world;
         
         [Inject] private EntityViewPool<PieceEntityView> _pieceEntityViewPool;
         
-        public int CreateRandomPieceEntity(int tileEntity)
+        public int CreateRandomPieceEntity(int tileEntity, bool forbidMatches = false)
         {
+            if (_world.GetPool<PieceTileLinkComponent>().Has(tileEntity))
+            {
+                var coordinates = _world.GetPool<TileComponent>().Get(tileEntity).Coordinates;
+                Debug.LogError($"Tile [{coordinates.x}, {coordinates.y}] already has a piece. I've said my piece");
+                return ECSTypes.NULL;
+            }
+            
             var pieceEntity = _world.NewEntity();
 
-            var pieceTypeIndex = RandomUtils.GetRandomInt(_pieceConfig.PieceTypesCount);
+            var pieceTypeIndex = GetTypeIndex(forbidMatches, tileEntity);
             
             _world.GetPool<PieceTypeComponent>().Add(pieceEntity) = new PieceTypeComponent
             {
@@ -52,6 +63,8 @@ namespace Scripts.Features.Piece
                 View = pieceView,
             };
             
+            _world.GetPool<ChangedPositionComponent>().Add(pieceEntity) = new ChangedPositionComponent();
+            
             return pieceEntity;
         }
 
@@ -74,6 +87,34 @@ namespace Scripts.Features.Piece
             {
                 LinkedEntity = pieceEntity,
             };
+        }
+
+        private int GetTypeIndex(bool forbidMatches, int tileEntity)
+        {
+            var randomIndex = RandomUtils.GetRandomInt(_pieceConfig.PieceTypesCount);
+            if (!forbidMatches)
+            {
+                return randomIndex;
+            }
+            
+            var tileComponent = _world.GetPool<TileComponent>().Get(tileEntity);
+
+            var tileComponentCoordinates = tileComponent.Coordinates;
+            for (var i = 0; i < _pieceConfig.PieceTypesCount; i++)
+            {
+                var randomOffsetIndex = (randomIndex + i) % _pieceConfig.PieceTypesCount;
+                var allPotentialNeighboursOfSameType = _matchingService.GetMatchingCandidates(tileComponentCoordinates, randomOffsetIndex);
+
+                var potentialMatches = _matchingService.FindMatchesCoordinates(allPotentialNeighboursOfSameType);
+                if (potentialMatches.Count == 0)
+                {
+                    return randomOffsetIndex;
+                }
+            }
+            
+            //TODO Figure out what to do - e.g. refresh some or all of the board
+            Debug.LogError("No piece type found that doesn't create a match");
+            return randomIndex;
         }
     }
 }

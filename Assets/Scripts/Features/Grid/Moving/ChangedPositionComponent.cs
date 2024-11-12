@@ -1,6 +1,6 @@
 namespace Scripts.Features.Grid.Moving
 {
-    public struct MoveCompleteComponent
+    public struct ChangedPositionComponent
     {
     }
 }

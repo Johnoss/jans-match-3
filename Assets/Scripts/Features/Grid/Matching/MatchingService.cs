@@ -21,68 +21,92 @@ namespace Scripts.Features.Grid.Matching
             return MatchUtils.FindMatches(candidateCoordinates, _rulesConfig);
         }
         
-        public Vector2Int[] GetMatchingCandidates(int tileEntity)
+        public Vector2Int[] GetMatchingCandidates(Vector2Int coordinates, int? simulateIndex = null)
+        {
+            var tileEntity = _gridService.GetTileEntity(coordinates);
+            return tileEntity == ECSTypes.NULL ? Array.Empty<Vector2Int>() : GetMatchingCandidates(tileEntity, simulateIndex);
+        }
+        
+        public Vector2Int[] GetMatchingCandidates(int tileEntity, int? simulateIndex = null)
         {
             var tileComponent = _world.GetPool<TileComponent>().Get(tileEntity);
-            if(!_world.GetPool<PieceTileLinkComponent>().Has(tileEntity))
-            {
-                return Array.Empty<Vector2Int>();
-            }
-            
-            var pieceEntity = _world.GetPool<PieceTileLinkComponent>().Get(tileEntity).LinkedEntity;
-            
-            if(pieceEntity == ECSTypes.NULL)
-            {
-                return Array.Empty<Vector2Int>();
-            }
-            
-            var coordinates = tileComponent.Coordinates;
-            var pieceType = _world.GetPool<PieceTypeComponent>().Get(pieceEntity).TypeIndex;
 
-            var matchingNeighboursCoordinates = new HashSet<Vector2Int>() {coordinates};
-            var visited = new HashSet<Vector2Int>();
-            GetMatchingNeighboursRecursive(coordinates, pieceType, visited, matchingNeighboursCoordinates);
+            if (!TryGetPieceTypeIndex(tileEntity, simulateIndex, out var pieceTypeIndex))
+            {
+                return Array.Empty<Vector2Int>();
+            }
+
+            var coordinates = tileComponent.Coordinates;
+            var visited = new HashSet<Vector2Int>() { };
+            var matchingNeighboursCoordinates = new HashSet<Vector2Int> { coordinates };
+
+            GetMatchingNeighboursRecursive(coordinates, pieceTypeIndex, visited, matchingNeighboursCoordinates, simulateIndex);
 
             return matchingNeighboursCoordinates.Count >= _rulesConfig.MinMatchLength ? matchingNeighboursCoordinates.ToArray() : Array.Empty<Vector2Int>();
         }
 
-        private void GetMatchingNeighboursRecursive(Vector2Int coordinates, int pieceType, HashSet<Vector2Int> visited, HashSet<Vector2Int> matchingNeighbours)
+        private void GetMatchingNeighboursRecursive(Vector2Int coordinates, int lookupPieceType, HashSet<Vector2Int> visited, HashSet<Vector2Int> matchingNeighbours, int? simulateType = null)
         {
             var tileEntity = _gridService.GetTileEntity(coordinates);
             if(tileEntity == ECSTypes.NULL)
             {
                 return;
             }
-            
-            if(!_world.GetPool<PieceTileLinkComponent>().Has(tileEntity))
-            {
-                return;
-            }
-            
-            var pieceEntity = _world.GetPool<PieceTileLinkComponent>().Get(tileEntity).LinkedEntity;
-            if(pieceEntity == ECSTypes.NULL)
-            {
-                return;
-            }
-            
-            var pieceTypeComponent = _world.GetPool<PieceTypeComponent>().Get(pieceEntity);
-            if(pieceTypeComponent.TypeIndex != pieceType)
-            {
-                return;
-            }
 
-            if (!visited.Add(coordinates))
+            if (!TryGetPieceTypeIndex(tileEntity, simulateType, out var compareTypeIndex))
+            {
+                return;
+            }
+            
+            if (compareTypeIndex != lookupPieceType)
             {
                 return;
             }
             
             matchingNeighbours.Add(coordinates);
+            
+            if (!visited.Add(coordinates))
+            {
+                return;
+            }
 
             var tileComponent = _world.GetPool<TileComponent>().Get(tileEntity);
             foreach (var neighbour in tileComponent.NeighboringTileCoordinates)
             {
-                GetMatchingNeighboursRecursive(neighbour, pieceType, visited, matchingNeighbours);
+                GetMatchingNeighboursRecursive(neighbour, lookupPieceType, visited, matchingNeighbours);
             }
+        }
+
+        private bool TryGetPieceTypeIndex(int tileEntity, int? simulateIndex, out int pieceTypeIndex)
+        {
+            pieceTypeIndex = -1;
+
+            if (simulateIndex != null)
+            {
+                pieceTypeIndex =  simulateIndex.Value;
+                return true;
+            }
+            
+            if(!_world.GetPool<PieceTileLinkComponent>().Has(tileEntity))
+            {
+                return false;
+            }
+            
+            var pieceEntity = _world.GetPool<PieceTileLinkComponent>().Get(tileEntity).LinkedEntity;
+
+            if (pieceEntity == ECSTypes.NULL)
+            {
+                return false;
+            }
+            
+            if (!_world.GetPool<PieceTypeComponent>().Has(pieceEntity))
+            {
+                return false;
+            }
+
+            pieceTypeIndex = _world.GetPool<PieceTypeComponent>().Get(pieceEntity).TypeIndex;
+
+            return true;
         }
     }
 }

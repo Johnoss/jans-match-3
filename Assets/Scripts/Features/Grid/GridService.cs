@@ -33,7 +33,6 @@ namespace Scripts.Features.Grid
             _tileEntities = new int[_gridConfig.GridResolution.x, _gridConfig.GridResolution.y];
             
             CreateTiles();
-            PopulateTiles();
         }
 
         public bool AreNeighbours(int interactedTileA, int interactedTileB)
@@ -94,8 +93,6 @@ namespace Scripts.Features.Grid
                 .Select(GetPieceCoordinates)
                 .Min(pieceCoordinates => pieceCoordinates.y);
             
-            Debug.Log($"Bottom piece Y: {bottomPieceY}, fall distance: {bottomPieceY - emptyTileCoordinates.y}");
-            
             return bottomPieceY - emptyTileCoordinates.y;
         }
 
@@ -146,14 +143,6 @@ namespace Scripts.Features.Grid
             }
         }
 
-        private void PopulateTiles()
-        {
-            foreach (var tileEntity in _tileEntities)
-            {
-                _pieceService.CreateRandomPieceEntity(tileEntity);
-            }
-        }
-
         private void CreateTiles()
         {
             for (var row = 0; row < _gridConfig.GridResolution.y; row++)
@@ -167,7 +156,7 @@ namespace Scripts.Features.Grid
                     
                     CreateEntityViewLink(tileView, tileEntity);
                     
-                    _world.GetPool<ViewComponent>().Add(tileEntity) = new ViewComponent()
+                    _world.GetPool<ViewComponent>().Add(tileEntity) = new ViewComponent
                     {
                         View = tileView,
                     };
@@ -178,7 +167,7 @@ namespace Scripts.Features.Grid
 
         private void CreateEntityViewLink(TileView tileView, int tileEntity)
         {
-            _world.GetPool<TileViewLinkComponent>().Add(tileEntity) = new TileViewLinkComponent()
+            _world.GetPool<TileViewLinkComponent>().Add(tileEntity) = new TileViewLinkComponent
             {
                 View = tileView,
             };
@@ -202,7 +191,7 @@ namespace Scripts.Features.Grid
             var neighboringTileEntities = tileComponent.NeighboringTileCoordinates
                 .Select(neighborCoordinate => _tileEntities[neighborCoordinate.x, neighborCoordinate.y]).ToArray();
                     
-            _world.GetPool<NeighboursComponent>().Add(tileEntity) = new NeighboursComponent()
+            _world.GetPool<NeighboursComponent>().Add(tileEntity) = new NeighboursComponent
             {
                 NeighboringTileEntities = neighboringTileEntities,
             };
@@ -210,20 +199,25 @@ namespace Scripts.Features.Grid
 
         private int CreateTileEntity(Vector2Int coordinates)
         {
-            var entity = _world.NewEntity();
+            var tileEntity = _world.NewEntity();
 
             //Check bounds and add valid neighbours
             var validNeighbours = _gridConfig.NeighboringOffsets
                 .Select(neighboringOffset => coordinates + neighboringOffset)
                 .Where(neighbor => neighbor.IsWithinBounds(_gridConfig.GridResolution)).ToArray();
 
-            _world.GetPool<TileComponent>().Add(entity) = new TileComponent
+            _world.GetPool<TileComponent>().Add(tileEntity) = new TileComponent
             {
                 Coordinates = coordinates,
                 NeighboringTileCoordinates = validNeighbours
             };
+            
+            _world.GetPool<SpawnTargetComponent>().Add(tileEntity) = new SpawnTargetComponent
+            {
+                ForbidMatches = true,
+            };
 
-            return entity;
+            return tileEntity;
         }
     }
 }

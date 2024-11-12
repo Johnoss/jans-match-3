@@ -11,14 +11,13 @@ namespace Scripts.Features.Grid.Moving
         private EcsFilterInject<Inc<PieceViewLinkComponent, PieceTileLinkComponent, MoveToTileComponent>> _moveToTileFilter;
         
         private EcsPoolInject<TileViewLinkComponent> _tileViewLinkPool;
-        private EcsPoolInject<MoveCompleteComponent> _moveCompletePool;
+        private EcsPoolInject<ChangedPositionComponent> _moveCompletePool;
         private EcsPoolInject<IsFallingComponent> _isFallingPool;
         
         public void Run(EcsSystems systems)
         {
             foreach (var entity in _moveToTileFilter.Value)
             {
-                //TODO move piece to tile
                 var targetTileEntity = _moveToTileFilter.Pools.Inc2.Get(entity).LinkedEntity;
                 var pieceView = _moveToTileFilter.Pools.Inc1.Get(entity).View;
                 
@@ -32,7 +31,10 @@ namespace Scripts.Features.Grid.Moving
 
         private void ConcludeMove(int entity)
         {
-            _moveCompletePool.Value.Add(entity) = new MoveCompleteComponent();
+            if(!_moveCompletePool.Value.Has(entity))
+            {
+                _moveCompletePool.Value.Add(entity) = new ChangedPositionComponent();
+            }
             if (_isFallingPool.Value.Has(entity))
             {
                 _isFallingPool.Value.Del(entity);

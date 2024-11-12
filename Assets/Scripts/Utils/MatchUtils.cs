@@ -9,6 +9,11 @@ namespace Scripts.Utils
     {
         public static HashSet<Vector2Int> FindMatches(Vector2Int[] candidateCoordinates, RulesConfig rulesConfig)
         {
+            if (candidateCoordinates.Length == 0)
+            {
+                return new HashSet<Vector2Int>();
+            }
+            
             var minLineLength = rulesConfig.MinMatchLength;
             var grid = candidateCoordinates.ConvertToGrid(out var width, out var height, out Vector2Int offset);
 
