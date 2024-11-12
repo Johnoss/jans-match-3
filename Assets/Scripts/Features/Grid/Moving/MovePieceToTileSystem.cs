@@ -11,7 +11,7 @@ namespace Scripts.Features.Grid.Moving
         private EcsFilterInject<Inc<PieceViewLinkComponent, PieceTileLinkComponent, MoveToTileComponent>> _moveToTileFilter;
         
         private EcsPoolInject<TileViewLinkComponent> _tileViewLinkPool;
-        private EcsPoolInject<ChangedPositionComponent> _moveCompletePool;
+        private EcsPoolInject<MoveCompleteCommand> _moveCompletePool;
         private EcsPoolInject<IsFallingComponent> _isFallingPool;
         
         public void Run(EcsSystems systems)
@@ -33,7 +33,7 @@ namespace Scripts.Features.Grid.Moving
         {
             if(!_moveCompletePool.Value.Has(entity))
             {
-                _moveCompletePool.Value.Add(entity) = new ChangedPositionComponent();
+                _moveCompletePool.Value.Add(entity) = new MoveCompleteCommand();
             }
             if (_isFallingPool.Value.Has(entity))
             {

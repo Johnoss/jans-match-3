@@ -14,7 +14,7 @@ namespace Scripts.Features.Input
         private readonly EcsFilterInject<Inc<UserInteractingComponent, TileViewLinkComponent>, Exc<BlockInteractionComponent>> _isInteractingFilter;
         
         private readonly EcsPoolInject<UserInteractingComponent> _userInteractingPool;
-        private readonly EcsPoolInject<SwapPieceCommand> _swapPieceCommandPool;
+        private readonly EcsPoolInject<SwapPieceComponent> _swapPieceCommandPool;
         private readonly EcsPoolInject<PieceTileLinkComponent> _pieceTileLinkPool;
         
         private readonly EcsCustomInject<GridService> _gridService;
@@ -70,7 +70,6 @@ namespace Scripts.Features.Input
             
             if (!_gridService.Value.AreNeighbours(originTileEntity, targetTileEntity))
             {
-                //TODO shake effect
                 ClearInteraction();
                 return;
             }
@@ -84,14 +83,18 @@ namespace Scripts.Features.Input
             var originPieceEntity = _pieceTileLinkPool.Value.Get(originTileEntity).LinkedEntity;
             var targetPieceEntity = _pieceTileLinkPool.Value.Get(targetTileEntity).LinkedEntity;
             
-            _swapPieceCommandPool.Value.Add(originPieceEntity) = new SwapPieceCommand
+            _swapPieceCommandPool.Value.Add(originPieceEntity) = new SwapPieceComponent
             {
-                TargetEntity = targetTileEntity,
+                SourceTileEntity = originTileEntity,
+                TargetTileEntity = targetTileEntity,
+                TargetPieceEntity = targetPieceEntity,
             };
             
-            _swapPieceCommandPool.Value.Add(targetPieceEntity) = new SwapPieceCommand
+            _swapPieceCommandPool.Value.Add(targetPieceEntity) = new SwapPieceComponent
             {
-                TargetEntity = originTileEntity,
+                SourceTileEntity = targetTileEntity,
+                TargetTileEntity = originTileEntity,
+                TargetPieceEntity = originPieceEntity,
             };
             
             ClearInteraction();

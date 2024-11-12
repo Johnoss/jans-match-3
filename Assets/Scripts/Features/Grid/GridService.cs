@@ -113,8 +113,6 @@ namespace Scripts.Features.Grid
             //TODO GetOrCreate helper method
             var pieceTileLinkPool = _world.GetPool<PieceTileLinkComponent>();
             
-            //UnlinkPieceFromTile(pieceEntity);
-
             ref var pieceToTileLink = ref !pieceTileLinkPool.Has(pieceEntity)
                 ? ref pieceTileLinkPool.Add(pieceEntity)
                 : ref pieceTileLinkPool.Get(pieceEntity);

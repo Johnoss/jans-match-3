@@ -33,6 +33,7 @@ namespace Initialization.ECS
                 .Add(new ExecuteFallSystem())
                 .Add(new MovePieceToTileSystem())
                 .Add(new DetermineMatchesSystem())
+                .Add(new ValidateSwapSystem())
                 .Add(new CollectMatchesSystem())
                 .Add(new DestroyEntitySystem())
                 .Add(new SpawnPieceSystem())

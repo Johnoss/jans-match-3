@@ -45,20 +45,7 @@ namespace Scripts.Features.Grid.Moving
                 {
                     FallDistance = fallDistance,
                 };
-                
-                //SetTargetTile(fallDistance, pieceEntity);
-
-                //_moveToTilePool.Value.Add(pieceEntity) = new MoveToTileComponent();
             }
-        }
-
-        private void SetTargetTile(int fallDistance, int pieceEntity)
-        {
-            var pieceCoordinates = _gridService.Value.GetPieceCoordinates(pieceEntity);
-            var targetCoordinates = pieceCoordinates + Vector2Int.down * fallDistance;
-            var targetTileEntity = _gridService.Value.GetTileEntity(targetCoordinates);
-
-            _gridService.Value.SetTilePieceLink(targetTileEntity, pieceEntity);
         }
     }
 }

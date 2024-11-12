@@ -7,7 +7,7 @@ namespace Scripts.Features.Grid.Moving
 {
     public class ExecuteFallSystem : IEcsRunSystem
     {
-        private EcsFilterInject<Inc<IsFallingComponent, PieceTileLinkComponent, PieceComponent>> _fallingPiecesFilter;
+        private EcsFilterInject<Inc<IsFallingComponent, PieceTileLinkComponent, PieceComponent>, Exc<MoveToTileComponent>> _fallingPiecesFilter;
         
         private EcsPoolInject<MoveToTileComponent> _moveToTilePool;
         

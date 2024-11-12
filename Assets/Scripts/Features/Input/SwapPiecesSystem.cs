@@ -8,23 +8,21 @@ namespace Scripts.Features.Input
 {
     public class SwapPiecesSystem : IEcsRunSystem
     {
-        private readonly EcsFilterInject<Inc<SwapPieceCommand, PieceTileLinkComponent, PieceViewLinkComponent>> _swapPieceCommands;
+        private readonly EcsFilterInject<Inc<SwapPieceComponent, PieceTileLinkComponent, PieceViewLinkComponent>, Exc<MoveToTileComponent>> _swapPieceFilter;
         
         private readonly EcsPoolInject<PieceTileLinkComponent> _pieceTileLinkPool;
         private readonly EcsPoolInject<MoveToTileComponent> _moveToTilePool;
-
+        
         private readonly EcsCustomInject<GridService> _gridService; 
             
         public void Run(EcsSystems systems)
         {
-            foreach (var pieceEntity in _swapPieceCommands.Value)
+            foreach (var pieceEntity in _swapPieceFilter.Value)
             {
-                var swapPieceCommandComponent = _swapPieceCommands.Pools.Inc1.Get(pieceEntity);
-                var targetTileEntity = swapPieceCommandComponent.TargetEntity;
+                var swapPieceCommandComponent = _swapPieceFilter.Pools.Inc1.Get(pieceEntity);
+                var targetTileEntity = swapPieceCommandComponent.TargetTileEntity;
                 
                 _gridService.Value.SetTilePieceLink(targetTileEntity, pieceEntity);
-                
-                _swapPieceCommands.Pools.Inc1.Del(pieceEntity);
                 
                 _moveToTilePool.Value.Add(pieceEntity) = new MoveToTileComponent();
             }

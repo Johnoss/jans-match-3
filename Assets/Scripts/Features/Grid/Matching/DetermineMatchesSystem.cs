@@ -3,35 +3,38 @@ using System.Linq;
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
 using Scripts.Features.Grid.Moving;
+using Scripts.Features.Input;
 using Scripts.Features.Piece;
 
 namespace Scripts.Features.Grid.Matching
 {
     public class DetermineMatchesSystem : IEcsRunSystem
     {
-        private EcsFilterInject<Inc<ChangedPositionComponent, PieceComponent, PieceTileLinkComponent>> _moveCompleteFilter;
+        private EcsFilterInject<Inc<MoveCompleteCommand, PieceComponent, PieceTileLinkComponent>> _moveCompleteFilter;
         
         private EcsCustomInject<MatchingService> _matchingService;
         private EcsCustomInject<GridService> _gridService;
 
+        private EcsPoolInject<SwapPieceComponent> _swapPiecePool;
         private EcsPoolInject<IsMatchComponent> _isMatchPool;
         
         public void Run(EcsSystems systems)
         {
-            foreach (var entity in _moveCompleteFilter.Value)
+            foreach (var pieceEntity in _moveCompleteFilter.Value)
             {
-                var pieceTileLinkComponent = _moveCompleteFilter.Pools.Inc3.Get(entity);
-                _moveCompleteFilter.Pools.Inc1.Del(entity);
+                var pieceTileLinkComponent = _moveCompleteFilter.Pools.Inc3.Get(pieceEntity);
+                _moveCompleteFilter.Pools.Inc1.Del(pieceEntity);
                 
                 var tileEntity = pieceTileLinkComponent.LinkedEntity;
                 
                 var matchingNeighbours = _matchingService.Value.GetMatchingCandidates(tileEntity);
-                if (matchingNeighbours.Length == 0)
+                var legalMatches = _matchingService.Value.FindMatchesCoordinates(matchingNeighbours);
+                
+                if (legalMatches.Count == 0)
                 {
                     continue;
                 }
-                
-                var legalMatches = _matchingService.Value.FindMatchesCoordinates(matchingNeighbours);
+
                 MarkMatchedPieces(_gridService.Value.GetPieceEntitiesAtCoordinates(legalMatches));
             }
         }

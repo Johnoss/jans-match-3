@@ -63,7 +63,7 @@ namespace Scripts.Features.Piece
                 View = pieceView,
             };
             
-            _world.GetPool<ChangedPositionComponent>().Add(pieceEntity) = new ChangedPositionComponent();
+            _world.GetPool<MoveCompleteCommand>().Add(pieceEntity) = new MoveCompleteCommand();
             
             return pieceEntity;
         }
