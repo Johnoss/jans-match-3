@@ -19,6 +19,8 @@ namespace Initialization.ECS
         [Inject] private MatchingService _matchingService;
         [Inject] private PieceService _pieceService;
         
+        [Inject] private RulesConfig _rulesConfig;
+        
         private EcsSystems _systems;
         
         [Inject]
@@ -39,6 +41,7 @@ namespace Initialization.ECS
                 .Add(new ValidateSwapSystem())
                 .Add(new DestroyEntitySystem())
                 .Add(new CollectMatchesSystem())
+                .Add(new ValidatePossibleMovesSystem())
 #if UNITY_EDITOR
                 .Add(new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem(null, true, entityNameFormat: "D"))
 #endif
@@ -57,6 +60,7 @@ namespace Initialization.ECS
                 _gridService,
                 _matchingService,
                 _pieceService,
+                _rulesConfig,
             };
         }
         

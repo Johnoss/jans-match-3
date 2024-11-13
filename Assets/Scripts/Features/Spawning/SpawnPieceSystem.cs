@@ -1,6 +1,7 @@
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
 using Scripts.Features.Grid;
+using Scripts.Features.Grid.Matching;
 using Scripts.Features.Piece;
 
 namespace Scripts.Features.Spawning
@@ -11,6 +12,8 @@ namespace Scripts.Features.Spawning
         
         private EcsCustomInject<PieceService> _pieceService;
         
+        private EcsCustomInject<MatchingService> _matchingService;
+        
         public void Run(EcsSystems systems)
         {
             foreach (var spawnTileEntity in _spawnTargetsFilter.Value)
@@ -19,6 +22,8 @@ namespace Scripts.Features.Spawning
                 _pieceService.Value.CreateRandomPieceEntity(spawnTileEntity, spawnComponent.ForbidMatches);
                 
                 _spawnTargetsFilter.Pools.Inc1.Del(spawnTileEntity);
+                
+                _matchingService.Value.OnBoardUpdated();
             }
         }
     }

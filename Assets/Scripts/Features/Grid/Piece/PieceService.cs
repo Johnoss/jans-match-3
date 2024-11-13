@@ -100,10 +100,13 @@ namespace Scripts.Features.Piece
             var tileComponent = _world.GetPool<TileComponent>().Get(tileEntity);
 
             var tileComponentCoordinates = tileComponent.Coordinates;
+            //key is the coordinates of the tile, value is the piece type index
+            var simulatedTileType = new Dictionary<Vector2Int, int> { {tileComponentCoordinates, 0} };
             for (var i = 0; i < _pieceConfig.PieceTypesCount; i++)
             {
                 var randomOffsetIndex = (randomIndex + i) % _pieceConfig.PieceTypesCount;
-                var allPotentialNeighboursOfSameType = _matchingService.GetMatchingCandidates(tileComponentCoordinates, randomOffsetIndex);
+                simulatedTileType[tileComponentCoordinates] = randomOffsetIndex;
+                var allPotentialNeighboursOfSameType = _matchingService.GetMatchingCandidates(tileComponentCoordinates, simulatedTileType);
 
                 var potentialMatches = _matchingService.FindMatchesCoordinates(allPotentialNeighboursOfSameType);
                 if (potentialMatches.Count == 0)

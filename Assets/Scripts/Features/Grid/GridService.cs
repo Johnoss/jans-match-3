@@ -3,7 +3,6 @@ using System.Linq;
 using Initialization.ECS;
 using Leopotam.EcsLite;
 using Scripts.Features.Grid.Matching;
-using Scripts.Features.Grid.Moving;
 using Scripts.Features.Piece;
 using Scripts.Features.Spawning;
 using UnityEngine;
@@ -24,6 +23,7 @@ namespace Scripts.Features.Grid
         [Inject] private TileView.ViewFactory _tileViewFactory;
 
         private int[,] _tileEntities;
+        
         public void SetupGrid()
         {
             _gridView.SetupBoard();
@@ -93,15 +93,6 @@ namespace Scripts.Features.Grid
 
             return tilesAbove;
         }
-        
-        public int GetFallDistance(HashSet<int> piecesToFall, Vector2Int emptyTileCoordinates)
-        {
-            var bottomPieceY = piecesToFall
-                .Select(GetPieceCoordinates)
-                .Min(pieceCoordinates => pieceCoordinates.y);
-            
-            return bottomPieceY - emptyTileCoordinates.y;
-        }
 
         public Vector2Int GetPieceCoordinates(int pieceEntity)
         {
@@ -113,6 +104,18 @@ namespace Scripts.Features.Grid
             
             var pieceTile = _world.GetPool<PieceTileLinkComponent>().Get(pieceEntity).LinkedEntity;
             return _world.GetPool<TileComponent>().Get(pieceTile).Coordinates;
+        }
+        
+        public bool TryGetNextCoordinates(Vector2Int currentCoordinates, out Vector2Int nextCoordinates)
+        {
+            var totalColumns = _gridConfig.GridResolution.x;
+            var totalRows = _gridConfig.GridResolution.y;
+
+            var nextX = (currentCoordinates.x + 1) % totalColumns;
+            var nextY = currentCoordinates.y + (currentCoordinates.x + 1) / totalColumns;
+
+            nextCoordinates = new Vector2Int(nextX, nextY);
+            return nextY < totalRows;
         }
 
         public void SetTilePieceLink(int targetTileEntity, int pieceEntity)

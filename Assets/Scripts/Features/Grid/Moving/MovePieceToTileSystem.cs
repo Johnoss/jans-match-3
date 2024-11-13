@@ -1,5 +1,6 @@
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
+using Scripts.Features.Grid.Matching;
 using Scripts.Features.Input;
 using Scripts.Features.Piece;
 using UnityEngine;
@@ -13,6 +14,8 @@ namespace Scripts.Features.Grid.Moving
         private EcsPoolInject<TileViewLinkComponent> _tileViewLinkPool;
         private EcsPoolInject<MoveCompleteCommand> _moveCompletePool;
         private EcsPoolInject<IsFallingComponent> _isFallingPool;
+
+        private EcsCustomInject<MatchingService> _matchService;
         
         public void Run(EcsSystems systems)
         {
@@ -40,6 +43,8 @@ namespace Scripts.Features.Grid.Moving
                 _isFallingPool.Value.Del(entity);
             }
             _moveToTileFilter.Pools.Inc3.Del(entity);
+
+            _matchService.Value.OnBoardUpdated();
         }
 
         private void MoveView(int targetTileEntity, PieceEntityView pieceView)

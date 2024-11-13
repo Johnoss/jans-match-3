@@ -1,5 +1,6 @@
 using MVC;
 using Scripts.Features.Grid;
+using Scripts.Features.Grid.Matching;
 using Scripts.Features.Piece;
 using UnityEngine;
 using Zenject;
@@ -14,6 +15,7 @@ namespace Initialization
         [Inject] private EntityViewPool<PieceEntityView> _pieceEntityViewPool;
         
         [Inject] private GridService _gridService;
+        [Inject] private MatchingService _matchingService;
         [Inject] private GridConfig _gridConfig;
         
         private readonly Transform _pooledObjectsParent;
@@ -29,6 +31,7 @@ namespace Initialization
         {
             SetupPools();
             _gridService.SetupGrid();
+            _matchingService.CreatePossibleMovesEntity();
         }
 
         private void SetupPools()
