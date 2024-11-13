@@ -68,23 +68,30 @@ namespace Scripts.Features.Grid
             return GetPieceEntity(coordinates.x, coordinates.y);
         }
 
-        public HashSet<int> GetPiecesToFall(Vector2Int tileComponentCoordinates)
+        public HashSet<int> GetEmptyTilesBelow(Vector2Int tileComponentCoordinates)
         {
-            var column = tileComponentCoordinates.x;
-            var startingRow = tileComponentCoordinates.y;
-            var piecesAbove = new HashSet<int>();
-            for (var row = startingRow + 1; row < _gridConfig.GridResolution.y; row++)
+            var emptyTiles = new HashSet<int>();
+            for (var row = tileComponentCoordinates.y - 1; row >= 0; row--)
             {
-                var pieceEntity = GetPieceEntity(column, row);
-                if (pieceEntity == ECSTypes.NULL || _world.GetPool<IsFallingComponent>().Has(pieceEntity))
+                var tileEntity = _tileEntities[tileComponentCoordinates.x, row];
+                if (!_world.GetPool<PieceTileLinkComponent>().Has(tileEntity))
                 {
-                    continue;
+                    emptyTiles.Add(tileEntity);
                 }
-                
-                piecesAbove.Add(pieceEntity);
             }
 
-            return piecesAbove;
+            return emptyTiles;
+        }
+
+        public HashSet<int> GetTilesAbove(Vector2Int tileComponentCoordinates)
+        {
+            var tilesAbove = new HashSet<int>();
+            for (var row = tileComponentCoordinates.y + 1; row < _gridConfig.GridResolution.y; row++)
+            {
+                tilesAbove.Add(_tileEntities[tileComponentCoordinates.x, row]);
+            }
+
+            return tilesAbove;
         }
         
         public int GetFallDistance(HashSet<int> piecesToFall, Vector2Int emptyTileCoordinates)

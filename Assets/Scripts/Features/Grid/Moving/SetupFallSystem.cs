@@ -10,41 +10,39 @@ namespace Scripts.Features.Grid.Moving
 {
     public class SetupFallSystem : IEcsRunSystem
     {
-        private EcsFilterInject<Inc<TileComponent>, Exc<PieceTileLinkComponent, SpawnTargetComponent>> _emptyTilesFilter;
+        private EcsFilterInject<Inc<TileComponent, FallOccupantComponent, PieceTileLinkComponent>> _occupiedFallingTiles;
+        private EcsFilterInject<Inc<FallOccupantComponent>> _emptyFallingTiles;
 
         private EcsCustomInject<GridService> _gridService;
-        private EcsPoolInject<IsFallingComponent> _isFallingPool;
-        private EcsPoolInject<MoveToTileComponent> _moveToTilePool;
-        private EcsPoolInject<PieceTileLinkComponent> _pieceTileLinkPool;
-        private EcsPoolInject<SpawnTargetComponent> _spawnTargetPool;
+        private EcsPoolInject<IsFallingComponent> _isFallingComponent;
         
         public void Run(EcsSystems systems)
         {
-            foreach (var tileEntity in _emptyTilesFilter.Value)
+            SetupPiecesToFall();
+            ClearEmptyFallTiles();
+        }
+
+        private void SetupPiecesToFall()
+        {
+            foreach (var tileEntity in _occupiedFallingTiles.Value)
             {
-                var tileComponent = _emptyTilesFilter.Pools.Inc1.Get(tileEntity);
-                var emptyTileCoordinates = tileComponent.Coordinates;
-                var piecesToFall = _gridService.Value.GetPiecesToFall(tileComponent.Coordinates);
+                var tileComponent = _occupiedFallingTiles.Pools.Inc1.Get(tileEntity);
+                var tileLinkComponent = _occupiedFallingTiles.Pools.Inc3.Get(tileEntity);
+                var pieceEntity = tileLinkComponent.LinkedEntity;
                 
-                if (piecesToFall.Count == 0)
+                var emptyTiles = _gridService.Value.GetEmptyTilesBelow(tileComponent.Coordinates); 
+                _isFallingComponent.Value.Add(pieceEntity) = new IsFallingComponent()
                 {
-                    _spawnTargetPool.Value.Add(tileEntity) = new SpawnTargetComponent();
-                    continue;
-                }
-                
-                MarkPiecesAsFalling(piecesToFall, emptyTileCoordinates);
+                    FallDistance = emptyTiles.Count,
+                };
             }
         }
 
-        private void MarkPiecesAsFalling(HashSet<int> piecesToFall, Vector2Int emptyTileCoordinates)
+        private void ClearEmptyFallTiles()
         {
-            var fallDistance = _gridService.Value.GetFallDistance(piecesToFall, emptyTileCoordinates);
-            foreach (var pieceEntity in piecesToFall.Where(pieceEntity => !_isFallingPool.Value.Has(pieceEntity)))
+            foreach (var tileEntity in _emptyFallingTiles.Value)
             {
-                _isFallingPool.Value.Add(pieceEntity) = new IsFallingComponent()
-                {
-                    FallDistance = fallDistance,
-                };
+                _emptyFallingTiles.Pools.Inc1.Del(tileEntity);
             }
         }
     }

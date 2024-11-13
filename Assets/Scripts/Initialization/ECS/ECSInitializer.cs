@@ -27,16 +27,18 @@ namespace Initialization.ECS
             _systems = new EcsSystems(_world);
 
             _systems
+                .Add(new SpawnPieceSystem())
                 .Add(new InputSystem())
                 .Add(new SwapPiecesSystem())
+                .Add(new DetermineFallSystem())
                 .Add(new SetupFallSystem())
                 .Add(new ExecuteFallSystem())
+                .Add(new FillEmptyTilesSystem())
                 .Add(new MovePieceToTileSystem())
                 .Add(new DetermineMatchesSystem())
                 .Add(new ValidateSwapSystem())
-                .Add(new CollectMatchesSystem())
                 .Add(new DestroyEntitySystem())
-                .Add(new SpawnPieceSystem())
+                .Add(new CollectMatchesSystem())
 #if UNITY_EDITOR
                 .Add(new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem(null, true, entityNameFormat: "D"))
 #endif

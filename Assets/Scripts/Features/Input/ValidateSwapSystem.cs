@@ -20,13 +20,13 @@ namespace Scripts.Features.Input
                 var swapComponent = _swapPiecePool.Value.Get(entity);
                 var targetPieceEntity = swapComponent.TargetPieceEntity;
                 
-                if (!_isMatchPool.Value.Has(targetPieceEntity) && !_isMatchPool.Value.Has(entity))
+                if (_isMatchPool.Value.Has(targetPieceEntity) || _isMatchPool.Value.Has(entity))
                 {
-                    RevertInvalidMove(entity);
+                    _swapPiecePool.Value.Del(entity);
                 }
                 else
                 {
-                    _swapPiecePool.Value.Del(entity);
+                    RevertInvalidMove(entity);
                 }
             }
         }

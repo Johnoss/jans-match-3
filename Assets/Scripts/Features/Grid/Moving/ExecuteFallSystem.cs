@@ -27,6 +27,7 @@ namespace Scripts.Features.Grid.Moving
                 _gridService.Value.SetTilePieceLink(targetTile, pieceEntity);
                 
                 _moveToTilePool.Value.Add(pieceEntity) = new MoveToTileComponent();
+                _fallingPiecesFilter.Pools.Inc1.Del(pieceEntity);
             }
         }
     }
