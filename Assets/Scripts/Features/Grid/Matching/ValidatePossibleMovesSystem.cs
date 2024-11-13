@@ -2,19 +2,24 @@ using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
 using Scripts.Features.Grid.Moving;
 using Scripts.Features.Spawning;
-using UnityEngine;
+using Scripts.Features.Time;
+using Scripts.Utils;
 
 namespace Scripts.Features.Grid.Matching
 {
     public class ValidatePossibleMovesSystem : IEcsRunSystem
     {
-        private EcsFilterInject<Inc<PossibleMovesValidatorComponent>, Exc<FoundPossibleMovesComponent, NoPossibleMovesComponent>> _validatorFilter;
+        private EcsFilterInject<Inc<PossibleMovesValidatorComponent>, Exc<FoundPossibleMovesComponent, NoPossibleMovesComponent, ExpireComponent>> _validatorFilter;
         private EcsFilterInject<Inc<MoveCompleteCommand>> _moveCompleteFilter;
         
         private EcsFilterInject<Inc<SpawnTargetComponent>> _spawnTargetsFilter;
         private EcsFilterInject<Inc<MoveToTileComponent>> _moveToTileFilter;
-        private EcsFilterInject<Inc<FoundPossibleMovesComponent>> _foundPossibleMovesFilter;
+        private EcsFilterInject<Inc<FallOccupantComponent>> _fallOccupantFilter;
+        private EcsFilterInject<Inc<IsFallingComponent>> _isFallingFilter;
+        
         private EcsPoolInject<NoPossibleMovesComponent> _noPossibleMovesPool;
+        private EcsPoolInject<FoundPossibleMovesComponent> _foundPossibleMovesPool;
+        private EcsPoolInject<ExpireComponent> _expirePool;
         
         private EcsCustomInject<MatchingService> _matchingService;
         private EcsCustomInject<GridService> _gridService;
@@ -29,43 +34,55 @@ namespace Scripts.Features.Grid.Matching
             
             foreach (var checkEntity in _validatorFilter.Value)
             {
-                ref var checkComponent = ref _validatorFilter.Pools.Inc1.Get(checkEntity);
-
-                var maxIterations = _rulesConfig.Value.MaxIterationsPerFrame;
-                for (var i = 0; i < maxIterations; i++)
-                {
-                    if (!TryFindPossibleMatch(ref checkComponent, checkEntity))
-                    {
-                        continue;
-                    }
-                    
-                    _foundPossibleMovesFilter.Pools.Inc1.Add(checkEntity);
-                    return;
-                }
+                RunValidator(checkEntity);
             }
         }
-        
-        private bool TryFindPossibleMatch(ref PossibleMovesValidatorComponent checkComponent, int entity)
+
+        private void RunValidator(int checkEntity)
+        {
+            ref var checkComponent = ref _validatorFilter.Pools.Inc1.Get(checkEntity);
+
+            var maxIterations = _rulesConfig.Value.MaxIterationsPerFrame;
+            for (var i = 0; i < maxIterations; i++)
+            {
+                if (TryFindPossibleMatch(ref checkComponent))
+                {
+                    _foundPossibleMovesPool.Value.Add(checkEntity) = new FoundPossibleMovesComponent();
+                    return;
+                }
+
+                if (!_gridService.Value.TryGetNextCoordinates(checkComponent.CurrentIterationCoordinates, out var nextCoordinates))
+                {
+                    ref var expireComponent = ref _expirePool.Value.GetOrGetComponent(checkEntity);
+                    expireComponent.RemainingSeconds = _rulesConfig.Value.ShuffleDelaySeconds;
+                    _noPossibleMovesPool.Value.Add(checkEntity) = new NoPossibleMovesComponent();
+                    return;
+                }
+
+                checkComponent.CurrentIterationCoordinates = nextCoordinates;
+            }
+        }
+
+        private bool TryFindPossibleMatch(ref PossibleMovesValidatorComponent checkComponent)
         {
             var currentCoordinates = checkComponent.CurrentIterationCoordinates;
 
-            if (_matchingService.Value.HasPossibleMatch(currentCoordinates))
-            {
-                return true;
-            }
-
-            if (!_gridService.Value.TryGetNextCoordinates(currentCoordinates, out var nextCoordinates))
-            {
-                _noPossibleMovesPool.Value.Add(entity) = new NoPossibleMovesComponent();
-                return false;
-            }
-                    
-            checkComponent.CurrentIterationCoordinates = nextCoordinates;
-            return false;
+            return _matchingService.Value.HasPossibleMatch(currentCoordinates);
         }
+        
         private bool ShouldPauseValidation()
         {
             if (_spawnTargetsFilter.Value.GetEntitiesCount() > 0)
+            {
+                return true;
+            }
+            
+            if (_fallOccupantFilter.Value.GetEntitiesCount() > 0)
+            {
+                return true;
+            }
+            
+            if (_isFallingFilter.Value.GetEntitiesCount() > 0)
             {
                 return true;
             }

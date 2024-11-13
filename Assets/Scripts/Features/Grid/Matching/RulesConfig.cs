@@ -13,7 +13,11 @@ namespace Scripts.Features.Grid.Matching
         
         [Header("Possible Moves")]
         [SerializeField] private int _maxIterationsPerFrame = 10;
+        [SerializeField] private float _possibleMoveCheckDelaySeconds = 3f;
+        [SerializeField] private float _shuffleDelaySeconds = 1f;
         
         public int MaxIterationsPerFrame => _maxIterationsPerFrame;
+        public float PossibleMoveCheckDelaySeconds => _possibleMoveCheckDelaySeconds;
+        public float ShuffleDelaySeconds => _shuffleDelaySeconds;
     }
 }

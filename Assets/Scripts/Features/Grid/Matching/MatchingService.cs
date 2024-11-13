@@ -4,6 +4,7 @@ using System.Linq;
 using Initialization.ECS;
 using Leopotam.EcsLite;
 using Scripts.Features.Piece;
+using Scripts.Features.Time;
 using Scripts.Utils;
 using UnityEngine;
 using Zenject;
@@ -26,19 +27,19 @@ namespace Scripts.Features.Grid.Matching
         
         public void OnBoardUpdated()
         {
-            if (_world.GetPool<FoundPossibleMovesComponent>().Has(_possibleMovesEntity))
-            {
-                _world.GetPool<FoundPossibleMovesComponent>().Del(_possibleMovesEntity);
-            }
+            _world.GetPool<FoundPossibleMovesComponent>().DeleteComponent(_possibleMovesEntity);
+            _world.GetPool<NoPossibleMovesComponent>().DeleteComponent(_possibleMovesEntity);
             
             RestartCheckingPossibleMoves();
         }
 
         private void RestartCheckingPossibleMoves()
         {
-
+            ref var expireComponent = ref _world.GetPool<ExpireComponent>().GetOrGetComponent(_possibleMovesEntity);
             ref var checkingComponent = ref _world.GetPool<PossibleMovesValidatorComponent>().Get(_possibleMovesEntity);
+            
             checkingComponent.CurrentIterationCoordinates = Vector2Int.zero;
+            expireComponent.RemainingSeconds = _rulesConfig.PossibleMoveCheckDelaySeconds;
         }
         
         public bool HasPossibleMatch(Vector2Int coordinates)

@@ -1,4 +1,7 @@
-using Unity.Mathematics;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using Random = Unity.Mathematics.Random;
 
 namespace Scripts.Utils
 {
@@ -20,6 +23,21 @@ namespace Scripts.Utils
         public static int GetRandomInt(int min, int max)
         {
             return _random.NextInt(min, max);
+        }
+        
+        public static IEnumerable<Vector2Int> GetShuffledCoordinates(this Vector2Int gridResolution)
+        {
+            var coordinates = Enumerable.Range(0, gridResolution.x)
+                .SelectMany(x => Enumerable.Range(0, gridResolution.y), (x, y) => new Vector2Int(x, y))
+                .ToList();
+
+            for (var i = 0; i < coordinates.Count; i++)
+            {
+                var randomIndex = GetRandomInt(i, coordinates.Count);
+                (coordinates[i], coordinates[randomIndex]) = (coordinates[randomIndex], coordinates[i]);
+            }
+
+            return coordinates;
         }
     }
 }

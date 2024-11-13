@@ -6,6 +6,7 @@ using Scripts.Features.Grid.Moving;
 using Scripts.Features.Input;
 using Scripts.Features.Piece;
 using Scripts.Features.Spawning;
+using Scripts.Features.Time;
 using UniRx;
 using Zenject;
 
@@ -29,6 +30,7 @@ namespace Initialization.ECS
             _systems = new EcsSystems(_world);
 
             _systems
+                .Add(new ExpireSystem())
                 .Add(new SpawnPieceSystem())
                 .Add(new InputSystem())
                 .Add(new SwapPiecesSystem())
@@ -42,6 +44,7 @@ namespace Initialization.ECS
                 .Add(new DestroyEntitySystem())
                 .Add(new CollectMatchesSystem())
                 .Add(new ValidatePossibleMovesSystem())
+                .Add(new ShuffleBoardSystem())
 #if UNITY_EDITOR
                 .Add(new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem(null, true, entityNameFormat: "D"))
 #endif

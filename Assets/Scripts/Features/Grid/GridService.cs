@@ -5,6 +5,7 @@ using Leopotam.EcsLite;
 using Scripts.Features.Grid.Matching;
 using Scripts.Features.Piece;
 using Scripts.Features.Spawning;
+using Scripts.Utils;
 using UnityEngine;
 using Zenject;
 
@@ -118,18 +119,18 @@ namespace Scripts.Features.Grid
             return nextY < totalRows;
         }
 
+        public void SetTilePieceLink(Vector2Int targetTileCoordinates, int pieceEntity)
+        {
+            var targetTileEntity = GetTileEntity(targetTileCoordinates);
+            SetTilePieceLink(targetTileEntity, pieceEntity);
+        }
+        
         public void SetTilePieceLink(int targetTileEntity, int pieceEntity)
         {
-            //TODO GetOrCreate helper method
             var pieceTileLinkPool = _world.GetPool<PieceTileLinkComponent>();
-            
-            ref var pieceToTileLink = ref !pieceTileLinkPool.Has(pieceEntity)
-                ? ref pieceTileLinkPool.Add(pieceEntity)
-                : ref pieceTileLinkPool.Get(pieceEntity);
-                
-            ref var tileToPieceLink = ref !pieceTileLinkPool.Has(targetTileEntity)
-                ? ref pieceTileLinkPool.Add(targetTileEntity)
-                : ref pieceTileLinkPool.Get(targetTileEntity);
+
+            ref var pieceToTileLink = ref pieceTileLinkPool.GetOrGetComponent(pieceEntity);
+            ref var tileToPieceLink = ref pieceTileLinkPool.GetOrGetComponent(targetTileEntity);
             
             pieceToTileLink.LinkedEntity = targetTileEntity;
             tileToPieceLink.LinkedEntity = pieceEntity;
@@ -149,6 +150,11 @@ namespace Scripts.Features.Grid
             {
                 pieceTileLinkPool.Del(currentTileEntity);
             }
+        }
+        
+        public IEnumerable<Vector2Int> GetShuffledTileCoordinates()
+        {
+            return _gridConfig.GridResolution.GetShuffledCoordinates();
         }
 
         private void CreateTiles()
