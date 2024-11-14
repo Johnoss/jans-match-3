@@ -1,17 +1,20 @@
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
+using Scripts.Features.Grid.Moving;
 using Scripts.Features.Piece;
 using Scripts.Features.Spawning;
+using Scripts.Features.Time;
 
 namespace Scripts.Features.Grid.Matching
 {
     public class CollectMatchesSystem : IEcsRunSystem
     {
-        private EcsFilterInject<Inc<PieceComponent, IsMatchComponent, PieceTileLinkComponent>> _isMatchFilter;
+        private EcsFilterInject<Inc<PieceComponent, IsMatchComponent, PieceTileLinkComponent>, Exc<IsMovingComponent, ExpireComponent>> _isMatchFilter;
 
         private EcsPoolInject<DestroyEntityCommand> _destroyEntityCommandPool;
         private EcsPoolInject<PieceTileLinkComponent> _pieceTileLinkPool;
-        
+
+        private EcsCustomInject<GridService> _gridService;
         
         public void Run(EcsSystems systems)
         {
@@ -21,22 +24,11 @@ namespace Scripts.Features.Grid.Matching
                 
                 _destroyEntityCommandPool.Value.Add(pieceEntity) = new DestroyEntityCommand();
                 
-                UnlinkTileAndPiece(pieceEntity);
+                _gridService.Value.UnlinkPieceFromTile(pieceEntity);
 
 
                 //TODO score and celebration
             }
-        }
-
-        private void UnlinkTileAndPiece(int pieceEntity)
-        {
-            var tileEntity = _pieceTileLinkPool.Value.Get(pieceEntity).LinkedEntity;
-
-            if (_pieceTileLinkPool.Value.Has(tileEntity))
-            {
-                _pieceTileLinkPool.Value.Del(tileEntity);
-            }
-            _pieceTileLinkPool.Value.Del(pieceEntity);
         }
     }
 }

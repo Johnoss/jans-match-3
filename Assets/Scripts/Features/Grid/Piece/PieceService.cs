@@ -25,6 +25,8 @@ namespace Scripts.Features.Piece
         
         [Inject] private EntityViewPool<PieceEntityView> _pieceEntityViewPool;
         
+        [Inject] private GridView _gridView;
+        
         public int CreateRandomPieceEntity(int tileEntity, bool forbidMatches = false)
         {
             if (_world.GetPool<PieceTileLinkComponent>().Has(tileEntity))
@@ -63,15 +65,16 @@ namespace Scripts.Features.Piece
                 View = pieceView,
             };
             
-            _world.GetPool<MoveCompleteCommand>().Add(pieceEntity) = new MoveCompleteCommand();
+            //TODO anchorPosition offset and setup move (to simulate spawning above the board - no pun intended)
             
             return pieceEntity;
         }
 
         private PieceEntityView CreatePieceView(int pieceEntity, int tileEntity)
         {
-            var tileView = _world.GetPool<TileViewLinkComponent>().Get(tileEntity).View;
-            var view = _pieceEntityViewPool.GetPooledOrNewView(pieceEntity, tileView.PieceAnchor);
+            var view = _pieceEntityViewPool.GetPooledOrNewView(pieceEntity, _gridView.PiecesParent);
+            //TODO set offset for spawned pieces
+            view.RectTransform.anchoredPosition = _gridService.GetTileAnchorPosition(tileEntity);
 
             return view;
         }

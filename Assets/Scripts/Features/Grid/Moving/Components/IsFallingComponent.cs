@@ -1,7 +1,9 @@
+using UnityEngine;
+
 namespace Scripts.Features.Grid.Moving
 {
     public struct IsFallingComponent
     {
-        public int FallDistance;
+        public Vector2Int FallCoordinates;
     }
 }

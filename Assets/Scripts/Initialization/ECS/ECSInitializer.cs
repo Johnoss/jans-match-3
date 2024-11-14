@@ -7,6 +7,7 @@ using Scripts.Features.Input;
 using Scripts.Features.Piece;
 using Scripts.Features.Spawning;
 using Scripts.Features.Time;
+using Scripts.Utils;
 using UniRx;
 using Zenject;
 
@@ -19,37 +20,37 @@ namespace Initialization.ECS
         [Inject] private GridService _gridService;
         [Inject] private MatchingService _matchingService;
         [Inject] private PieceService _pieceService;
+        [Inject] private MoveService _moveService;
         
         [Inject] private RulesConfig _rulesConfig;
+        [Inject] private TweenConfig _tweenConfig;
         
         private EcsSystems _systems;
         
         [Inject]
         private void Init()
         {
-            _systems = new EcsSystems(_world);
-
-            _systems
-                .Add(new ExpireSystem())
-                .Add(new SpawnPieceSystem())
-                .Add(new InputSystem())
-                .Add(new SwapPiecesSystem())
-                .Add(new DetermineFallSystem())
-                .Add(new SetupFallSystem())
-                .Add(new ExecuteFallSystem())
-                .Add(new FillEmptyTilesSystem())
-                .Add(new MovePieceToTileSystem())
-                .Add(new DetermineMatchesSystem())
-                .Add(new ValidateSwapSystem())
-                .Add(new DestroyEntitySystem())
-                .Add(new CollectMatchesSystem())
-                .Add(new ValidatePossibleMovesSystem())
-                .Add(new ShuffleBoardSystem())
+            _systems = new EcsSystems(_world)
 #if UNITY_EDITOR
                 .Add(new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem(null, true, entityNameFormat: "D"))
 #endif
-                .Inject(GetInjectables())
-                .Init();
+                .Add(new ExpireSystem())
+                .Add(new InputSystem())
+                .Add(new SwapPiecesSystem(), new ValidateSwapSystem())
+                .Add(new SetupMoveSystem(), new StartMoveSystem(), new CompleteMoveSystem())
+                .Add(new DetermineFallSystem(), new SetupFallSystem(), new ExecuteFallSystem())
+                .Add(new FillEmptyTilesSystem(), new SpawnPieceSystem())
+                
+                .Add(new DetermineMatchesSystem(), new CollectMatchesSystem())
+                
+                .Add(new DestroyEntitySystem())
+                
+                .Add(new ValidatePossibleMovesSystem())
+                .Add(new ShuffleBoardSystem());
+                
+                _systems
+                    .Inject(GetInjectables())
+                    .Init();
             
             Observable.EveryUpdate().Subscribe(_ => RunSystems());
         }
@@ -60,10 +61,14 @@ namespace Initialization.ECS
             return new object[]
             {
                 _world,
+                
                 _gridService,
                 _matchingService,
                 _pieceService,
+                _moveService,
+                
                 _rulesConfig,
+                _tweenConfig,
             };
         }
         

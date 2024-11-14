@@ -13,7 +13,7 @@ namespace Scripts.Features.Grid.Matching
         
         private EcsFilterInject<Inc<PieceComponent, PieceTileLinkComponent>> _piecesFilter;
         
-        private EcsPoolInject<MoveToTileComponent> _moveToTilePool;
+        private EcsPoolInject<IsMovingComponent> _moveToTilePool;
         
         private EcsCustomInject<GridService> _gridService;
         
@@ -42,7 +42,7 @@ namespace Scripts.Features.Grid.Matching
                 
                 _gridService.Value.SetTilePieceLink(targetCoordinates, pieceEntity);
                 
-                _moveToTilePool.Value.Add(pieceEntity) = new MoveToTileComponent();
+                _moveToTilePool.Value.Add(pieceEntity) = new IsMovingComponent();
             }
         }
     }

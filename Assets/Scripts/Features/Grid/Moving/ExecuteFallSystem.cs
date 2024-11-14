@@ -1,17 +1,18 @@
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
 using Scripts.Features.Piece;
-using UnityEngine;
 
 namespace Scripts.Features.Grid.Moving
 {
     public class ExecuteFallSystem : IEcsRunSystem
     {
-        private EcsFilterInject<Inc<IsFallingComponent, PieceTileLinkComponent, PieceComponent>, Exc<MoveToTileComponent>> _fallingPiecesFilter;
+        private EcsFilterInject<Inc<IsFallingComponent, PieceComponent>> _fallingPiecesFilter;
         
-        private EcsPoolInject<MoveToTileComponent> _moveToTilePool;
+        private EcsPoolInject<StartMovePieceCommand> _startMovePieceCommandPool;
         
         private EcsCustomInject<GridService> _gridService;
+        private EcsCustomInject<MoveService> _moveService;
+        
         
         public void Run(EcsSystems systems)
         {
@@ -19,14 +20,11 @@ namespace Scripts.Features.Grid.Moving
             {
                 var isFallingComponent = _fallingPiecesFilter.Pools.Inc1.Get(pieceEntity);
                 
-                _gridService.Value.UnlinkPieceFromTile(pieceEntity);
-                
-                var targetCoordinates = _gridService.Value.GetPieceCoordinates(pieceEntity) + Vector2Int.down * isFallingComponent.FallDistance;
+                var targetCoordinates = isFallingComponent.FallCoordinates;
                 var targetTile = _gridService.Value.GetTileEntity(targetCoordinates);
                 
-                _gridService.Value.SetTilePieceLink(targetTile, pieceEntity);
+                _moveService.Value.SetupMovePieceCommand(pieceEntity, targetTile, MoveType.Fall);
                 
-                _moveToTilePool.Value.Add(pieceEntity) = new MoveToTileComponent();
                 _fallingPiecesFilter.Pools.Inc1.Del(pieceEntity);
             }
         }

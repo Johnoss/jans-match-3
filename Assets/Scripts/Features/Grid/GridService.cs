@@ -94,18 +94,6 @@ namespace Scripts.Features.Grid
 
             return tilesAbove;
         }
-
-        public Vector2Int GetPieceCoordinates(int pieceEntity)
-        {
-            if (!_world.GetPool<PieceTileLinkComponent>().Has(pieceEntity))
-            {
-                Debug.LogError("Trying to get coordinates of a piece that is not linked to a tile");
-                return Vector2Int.zero;
-            }
-            
-            var pieceTile = _world.GetPool<PieceTileLinkComponent>().Get(pieceEntity).LinkedEntity;
-            return _world.GetPool<TileComponent>().Get(pieceTile).Coordinates;
-        }
         
         public bool TryGetNextCoordinates(Vector2Int currentCoordinates, out Vector2Int nextCoordinates)
         {
@@ -129,8 +117,8 @@ namespace Scripts.Features.Grid
         {
             var pieceTileLinkPool = _world.GetPool<PieceTileLinkComponent>();
 
-            ref var pieceToTileLink = ref pieceTileLinkPool.GetOrGetComponent(pieceEntity);
-            ref var tileToPieceLink = ref pieceTileLinkPool.GetOrGetComponent(targetTileEntity);
+            ref var pieceToTileLink = ref pieceTileLinkPool.GetOrAddComponent(pieceEntity);
+            ref var tileToPieceLink = ref pieceTileLinkPool.GetOrAddComponent(targetTileEntity);
             
             pieceToTileLink.LinkedEntity = targetTileEntity;
             tileToPieceLink.LinkedEntity = pieceEntity;
@@ -146,15 +134,30 @@ namespace Scripts.Features.Grid
             }
             
             var currentTileEntity = pieceTileLinkPool.Get(pieceEntity).LinkedEntity;
-            if (pieceTileLinkPool.Has(currentTileEntity))
-            {
-                pieceTileLinkPool.Del(currentTileEntity);
-            }
+            pieceTileLinkPool.DeleteComponent(currentTileEntity);
         }
         
         public IEnumerable<Vector2Int> GetShuffledTileCoordinates()
         {
             return _gridConfig.GridResolution.GetShuffledCoordinates();
+        }
+
+        public Vector2 GetTileAnchorPosition(int tileEntity)
+        {
+            var tileComponent = _world.GetPool<TileComponent>().Get(tileEntity);
+            return GetTileAnchorPosition(tileComponent.Coordinates);
+        }
+        
+        public Vector2 GetTileAnchorPosition(Vector2Int coordinates)
+        {
+            var resolution = _gridConfig.GridResolution;
+            var tileSize = _gridConfig.TileSize;
+            var boardSize = new Vector2(resolution.x * tileSize.x, resolution.y * tileSize.y);
+            
+            return new Vector2(
+                coordinates.x * tileSize.x - boardSize.x / 2 + tileSize.x / 2,
+                coordinates.y * tileSize.y - boardSize.y / 2 + tileSize.y / 2
+            );
         }
 
         private void CreateTiles()

@@ -2,7 +2,9 @@ using System.Collections.Generic;
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
 using Scripts.Features.Grid;
+using Scripts.Features.Grid.Moving;
 using Scripts.Features.Piece;
+using Scripts.Features.Spawning;
 
 namespace Scripts.Features.Input
 {
@@ -10,8 +12,7 @@ namespace Scripts.Features.Input
     {
         private const int MAX_INTERACTED_TILES = 2;
         
-        //TODO add IsBusy or IsReady component
-        private readonly EcsFilterInject<Inc<UserInteractingComponent, TileViewLinkComponent>, Exc<BlockInteractionComponent>> _isInteractingFilter;
+        private readonly EcsFilterInject<Inc<UserInteractingComponent, TileViewLinkComponent>, Exc<IsMovingComponent, SpawnTargetComponent>> _isInteractingFilter;
         
         private readonly EcsPoolInject<UserInteractingComponent> _userInteractingPool;
         private readonly EcsPoolInject<SwapPieceComponent> _swapPieceCommandPool;
@@ -67,21 +68,23 @@ namespace Scripts.Features.Input
         {
             var originTileEntity = _interactedTileEntities[0];
             var targetTileEntity = _interactedTileEntities[1];
-            
-            if (!_gridService.Value.AreNeighbours(originTileEntity, targetTileEntity))
+
+            if (!_gridService.Value.AreNeighbours(originTileEntity, targetTileEntity) ||
+                !_pieceTileLinkPool.Value.Has(originTileEntity) ||
+                !_pieceTileLinkPool.Value.Has(targetTileEntity))
             {
                 ClearInteraction();
                 return;
             }
-            
-            if (!_pieceTileLinkPool.Value.Has(originTileEntity) || !_pieceTileLinkPool.Value.Has(targetTileEntity))
-            {
-                ClearInteraction();
-                return;
-            }
-            
+
             var originPieceEntity = _pieceTileLinkPool.Value.Get(originTileEntity).LinkedEntity;
             var targetPieceEntity = _pieceTileLinkPool.Value.Get(targetTileEntity).LinkedEntity;
+            
+            if(_swapPieceCommandPool.Value.Has(originPieceEntity) || _swapPieceCommandPool.Value.Has(targetPieceEntity))
+            {
+                ClearInteraction();
+                return;
+            }
             
             _swapPieceCommandPool.Value.Add(originPieceEntity) = new SwapPieceComponent
             {

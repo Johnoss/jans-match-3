@@ -13,9 +13,9 @@ namespace MVC
             Entity = entity;
         }
 
-        public void SetParent(Transform parent)
+        public void SetParent(Transform parent, bool worldPositionStays = false)
         {
-            transform.SetParent(parent);
+            transform.SetParent(parent, worldPositionStays);
         }
         
         public abstract void ResetView();

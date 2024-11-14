@@ -23,7 +23,7 @@ namespace Scripts.Features.Spawning
                 
                 _spawnTargetsFilter.Pools.Inc1.Del(spawnTileEntity);
                 
-                _matchingService.Value.OnBoardUpdated();
+                _matchingService.Value.SetBoardDirty();
             }
         }
     }

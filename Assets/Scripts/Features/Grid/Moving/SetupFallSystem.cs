@@ -1,9 +1,6 @@
-using System.Collections.Generic;
-using System.Linq;
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
 using Scripts.Features.Piece;
-using Scripts.Features.Spawning;
 using UnityEngine;
 
 namespace Scripts.Features.Grid.Moving
@@ -30,10 +27,18 @@ namespace Scripts.Features.Grid.Moving
                 var tileLinkComponent = _occupiedFallingTiles.Pools.Inc3.Get(tileEntity);
                 var pieceEntity = tileLinkComponent.LinkedEntity;
                 
-                var emptyTiles = _gridService.Value.GetEmptyTilesBelow(tileComponent.Coordinates); 
-                _isFallingComponent.Value.Add(pieceEntity) = new IsFallingComponent()
+                if (_isFallingComponent.Value.Has(pieceEntity))
                 {
-                    FallDistance = emptyTiles.Count,
+                    continue;
+                }
+                
+                var emptyTiles = _gridService.Value.GetEmptyTilesBelow(tileComponent.Coordinates); 
+                var fallDistance = emptyTiles.Count;
+                var fallCoordinates = tileComponent.Coordinates + Vector2Int.down * fallDistance;
+                
+                _isFallingComponent.Value.Add(pieceEntity) = new IsFallingComponent
+                {
+                    FallCoordinates = fallCoordinates,
                 };
             }
         }

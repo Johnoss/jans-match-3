@@ -12,7 +12,6 @@ namespace Scripts.Features.Grid.Moving
         private EcsFilterInject<Inc<TileComponent>, Exc<PieceTileLinkComponent, SpawnTargetComponent>> _emptyTilesFilter;
 
         private EcsCustomInject<GridService> _gridService;
-        private EcsPoolInject<MoveToTileComponent> _moveToTilePool;
         private EcsPoolInject<PieceTileLinkComponent> _pieceTileLinkPool;
         private EcsPoolInject<FallOccupantComponent> _fallOccupantPool;
         

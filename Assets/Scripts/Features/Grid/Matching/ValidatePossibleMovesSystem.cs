@@ -10,12 +10,9 @@ namespace Scripts.Features.Grid.Matching
     public class ValidatePossibleMovesSystem : IEcsRunSystem
     {
         private EcsFilterInject<Inc<PossibleMovesValidatorComponent>, Exc<FoundPossibleMovesComponent, NoPossibleMovesComponent, ExpireComponent>> _validatorFilter;
-        private EcsFilterInject<Inc<MoveCompleteCommand>> _moveCompleteFilter;
+        private EcsFilterInject<Inc<MoveCompleteComponent>> _moveCompleteFilter;
         
-        private EcsFilterInject<Inc<SpawnTargetComponent>> _spawnTargetsFilter;
-        private EcsFilterInject<Inc<MoveToTileComponent>> _moveToTileFilter;
-        private EcsFilterInject<Inc<FallOccupantComponent>> _fallOccupantFilter;
-        private EcsFilterInject<Inc<IsFallingComponent>> _isFallingFilter;
+        private EcsFilterInject<Inc<IsMovingComponent>> _moveToTileFilter;
         
         private EcsPoolInject<NoPossibleMovesComponent> _noPossibleMovesPool;
         private EcsPoolInject<FoundPossibleMovesComponent> _foundPossibleMovesPool;
@@ -53,7 +50,7 @@ namespace Scripts.Features.Grid.Matching
 
                 if (!_gridService.Value.TryGetNextCoordinates(checkComponent.CurrentIterationCoordinates, out var nextCoordinates))
                 {
-                    ref var expireComponent = ref _expirePool.Value.GetOrGetComponent(checkEntity);
+                    ref var expireComponent = ref _expirePool.Value.GetOrAddComponent(checkEntity);
                     expireComponent.RemainingSeconds = _rulesConfig.Value.ShuffleDelaySeconds;
                     _noPossibleMovesPool.Value.Add(checkEntity) = new NoPossibleMovesComponent();
                     return;
@@ -72,21 +69,6 @@ namespace Scripts.Features.Grid.Matching
         
         private bool ShouldPauseValidation()
         {
-            if (_spawnTargetsFilter.Value.GetEntitiesCount() > 0)
-            {
-                return true;
-            }
-            
-            if (_fallOccupantFilter.Value.GetEntitiesCount() > 0)
-            {
-                return true;
-            }
-            
-            if (_isFallingFilter.Value.GetEntitiesCount() > 0)
-            {
-                return true;
-            }
-            
             return _moveToTileFilter.Value.GetEntitiesCount() > 0;
         }
     }

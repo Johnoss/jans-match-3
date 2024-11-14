@@ -17,15 +17,12 @@ namespace Scripts.Features.Grid
     public class TileView : AbstractView
     {
         [SerializeField] private RectTransform _rectTransform;
-        [SerializeField] private RectTransform _pieceAnchor;
         
         [Header("Interaction")]
         [SerializeField] private Button _hitbox;
         
         [Header("Debug")]
         [SerializeField] private TextMeshProUGUI _debugText;
-        
-        public RectTransform PieceAnchor => _pieceAnchor;
         
         private int _entity;
         private EcsPool<UserInteractingComponent> _userInteractingPool;

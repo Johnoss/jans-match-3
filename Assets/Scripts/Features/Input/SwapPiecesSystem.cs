@@ -8,12 +8,12 @@ namespace Scripts.Features.Input
 {
     public class SwapPiecesSystem : IEcsRunSystem
     {
-        private readonly EcsFilterInject<Inc<SwapPieceComponent, PieceTileLinkComponent, PieceViewLinkComponent>, Exc<MoveToTileComponent>> _swapPieceFilter;
+        private readonly EcsFilterInject<Inc<SwapPieceComponent, PieceTileLinkComponent, PieceViewLinkComponent>, Exc<IsMovingComponent>> _swapPieceFilter;
         
         private readonly EcsPoolInject<PieceTileLinkComponent> _pieceTileLinkPool;
-        private readonly EcsPoolInject<MoveToTileComponent> _moveToTilePool;
         
         private readonly EcsCustomInject<GridService> _gridService; 
+        private readonly EcsCustomInject<MoveService> _moveService; 
             
         public void Run(EcsSystems systems)
         {
@@ -22,9 +22,9 @@ namespace Scripts.Features.Input
                 var swapPieceCommandComponent = _swapPieceFilter.Pools.Inc1.Get(pieceEntity);
                 var targetTileEntity = swapPieceCommandComponent.TargetTileEntity;
                 
-                _gridService.Value.SetTilePieceLink(targetTileEntity, pieceEntity);
+                var swapType = swapPieceCommandComponent.IsReverting ? MoveType.RevertSwap : MoveType.Swap;
                 
-                _moveToTilePool.Value.Add(pieceEntity) = new MoveToTileComponent();
+                _moveService.Value.SetupMovePieceCommand(pieceEntity, targetTileEntity, swapType);
             }
         }
     }

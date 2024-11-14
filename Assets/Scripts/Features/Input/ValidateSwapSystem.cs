@@ -1,6 +1,7 @@
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
 using Scripts.Features.Grid.Matching;
+using Scripts.Features.Grid.Moving;
 using Scripts.Features.Piece;
 using UnityEngine;
 
@@ -8,7 +9,7 @@ namespace Scripts.Features.Input
 {
     public class ValidateSwapSystem : IEcsRunSystem
     {
-        private EcsFilterInject<Inc<SwapPieceComponent, PieceComponent>> _invalidSwapFilter;
+        private EcsFilterInject<Inc<SwapPieceComponent, PieceComponent, MoveCompleteComponent>> _invalidSwapFilter;
         
         private EcsPoolInject<SwapPieceComponent> _swapPiecePool;
         private EcsPoolInject<IsMatchComponent> _isMatchPool;

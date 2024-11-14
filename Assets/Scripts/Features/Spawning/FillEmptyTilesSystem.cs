@@ -7,7 +7,7 @@ namespace Scripts.Features.Spawning
 {
     public class FillEmptyTilesSystem : IEcsRunSystem
     {
-        private EcsFilterInject<Inc<TileComponent>, Exc<PieceTileLinkComponent>> _spawnTargetsFilter;
+        private EcsFilterInject<Inc<TileComponent>, Exc<SpawnTargetComponent, PieceTileLinkComponent>> _spawnTargetsFilter;
 
         private EcsPoolInject<SpawnTargetComponent> _spawnTargetComponent;
         

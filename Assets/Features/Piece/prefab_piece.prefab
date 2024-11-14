@@ -241,6 +241,7 @@ MonoBehaviour:
   _bodyImage: {fileID: 901571230436708554}
   _eyesImage: {fileID: 5367479069801952131}
   _mouthImage: {fileID: 6940281358153870188}
+  _tweenTarget: {fileID: 6412420944238616428}
 --- !u!1 &8761918015479178931
 GameObject:
   m_ObjectHideFlags: 0

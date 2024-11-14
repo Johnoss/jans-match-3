@@ -25,7 +25,7 @@ namespace Scripts.Features.Grid.Matching
             _world.GetPool<PossibleMovesValidatorComponent>().Add(_possibleMovesEntity);
         }
         
-        public void OnBoardUpdated()
+        public void SetBoardDirty()
         {
             _world.GetPool<FoundPossibleMovesComponent>().DeleteComponent(_possibleMovesEntity);
             _world.GetPool<NoPossibleMovesComponent>().DeleteComponent(_possibleMovesEntity);
@@ -35,7 +35,7 @@ namespace Scripts.Features.Grid.Matching
 
         private void RestartCheckingPossibleMoves()
         {
-            ref var expireComponent = ref _world.GetPool<ExpireComponent>().GetOrGetComponent(_possibleMovesEntity);
+            ref var expireComponent = ref _world.GetPool<ExpireComponent>().GetOrAddComponent(_possibleMovesEntity);
             ref var checkingComponent = ref _world.GetPool<PossibleMovesValidatorComponent>().Get(_possibleMovesEntity);
             
             checkingComponent.CurrentIterationCoordinates = Vector2Int.zero;

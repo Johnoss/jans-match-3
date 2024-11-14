@@ -1,0 +1,63 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ce528861834a43e1a9a44bf175035edf, type: 3}
+  m_Name: TweenConfig
+  m_EditorClassIdentifier: 
+  _fallTweenSetting:
+    TweenDurationSeconds: 1
+    TweenDelaySeconds: 0
+    Ease: 2
+    IsSpeedBased: 0
+    LoopCount: 1
+    LoopType: 1
+    TargetVector: {x: 0, y: 0}
+  _swapTweenSetting:
+    TweenDurationSeconds: 0.5
+    TweenDelaySeconds: 0
+    Ease: 4
+    IsSpeedBased: 0
+    LoopCount: 1
+    LoopType: 1
+    TargetVector: {x: 0, y: 0}
+  _revertTweenSetting:
+    TweenDurationSeconds: 0.5
+    TweenDelaySeconds: 0
+    Ease: 2
+    IsSpeedBased: 0
+    LoopCount: 1
+    LoopType: 1
+    TargetVector: {x: 0, y: 0}
+  _collectTweenSetting:
+    TweenDurationSeconds: 1
+    TweenDelaySeconds: 0
+    Ease: 2
+    IsSpeedBased: 0
+    LoopCount: 1
+    LoopType: 1
+    TargetVector: {x: 0, y: 0}
+  _collectPunchScale: {x: 0, y: 0}
+  _hintTweenSetting:
+    TweenDurationSeconds: 1
+    TweenDelaySeconds: 0
+    Ease: 2
+    IsSpeedBased: 0
+    LoopCount: 1
+    LoopType: 1
+    TargetVector: {x: 0, y: 0}
+  _invalidSwapTweenSetting:
+    TweenDurationSeconds: 1
+    TweenDelaySeconds: 0
+    Ease: 2
+    IsSpeedBased: 0
+    LoopCount: 1
+    LoopType: 1
+    TargetVector: {x: 0, y: 0}
