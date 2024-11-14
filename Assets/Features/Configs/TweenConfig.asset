@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: TweenConfig
   m_EditorClassIdentifier: 
   _fallTweenSetting:
-    TweenDurationSeconds: 1
-    TweenDelaySeconds: 0
-    Ease: 2
+    TweenDurationSeconds: 0.35
+    TweenDelaySeconds: 0.05
+    Ease: 27
     IsSpeedBased: 0
     LoopCount: 1
     LoopType: 1

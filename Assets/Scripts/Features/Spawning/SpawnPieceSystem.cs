@@ -20,12 +20,6 @@ namespace Scripts.Features.Spawning
             {
                 var spawnComponent = _spawnTargetsFilter.Pools.Inc1.Get(spawnTileEntity);
                 
-                //TODO temporarily disabled
-                if (!spawnComponent.ForbidMatches)
-                {
-                    return;
-                }
-                
                 _pieceService.Value.CreateRandomPieceEntity(spawnTileEntity, spawnComponent.ForbidMatches);
                 
                 _matchingService.Value.SetBoardDirty();
