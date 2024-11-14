@@ -49,7 +49,7 @@ namespace Initialization.ECS
                 .Add(new ShuffleBoardSystem())
                 
                 .DelHere<MoveCompleteComponent>()
-                .DelHere<IsFallingComponent>()
+                .DelHere<FallPieceCommand>()
                 .DelHere<SpawnTargetComponent>()
                 .DelHere<DestroyEntityCommand>()
                 .DelHere<FallOccupantComponent>()

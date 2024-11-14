@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace Scripts.Features.Grid.Moving
 {
-    public struct IsFallingComponent
+    public struct FallPieceCommand
     {
         public Vector2Int FallCoordinates;
     }

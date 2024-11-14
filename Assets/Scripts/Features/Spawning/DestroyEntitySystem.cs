@@ -1,6 +1,8 @@
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
 using MVC;
+using Scripts.Features.Grid;
+using Scripts.Features.Piece;
 using UnityEngine;
 
 namespace Scripts.Features.Spawning
@@ -9,15 +11,26 @@ namespace Scripts.Features.Spawning
     {
         private EcsFilterInject<Inc<ViewComponent, DestroyEntityCommand>> _viewEntitiesFilter;
         private EcsFilterInject<Inc<DestroyEntityCommand>, Exc<ViewComponent>> _destroyEntityFilter;
+        private EcsFilterInject<Inc<DestroyEntityCommand, PieceTileLinkComponent, PieceComponent>> _pieceTileLinkFilter;
         
         private EcsPoolInject<PoolableViewComponent> _poolableViewComponentPool;
         
         private EcsCustomInject<EcsWorld> _world;
+        private EcsCustomInject<GridService> _gridService;
         
         public void Run(EcsSystems systems)
         {
+            UnlinkPiecesFromTiles();
             DestroyEntitiesWithView();
             DestroyViewlessEntities();
+        }
+
+        private void UnlinkPiecesFromTiles()
+        {
+            foreach (var pieceEntity in _pieceTileLinkFilter.Value)
+            {
+                _gridService.Value.UnlinkPieceFromTile(pieceEntity);
+            }
         }
 
         private void DestroyEntitiesWithView()

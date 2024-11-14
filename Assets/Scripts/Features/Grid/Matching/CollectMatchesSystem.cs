@@ -9,12 +9,14 @@ namespace Scripts.Features.Grid.Matching
 {
     public class CollectMatchesSystem : IEcsRunSystem
     {
-        private EcsFilterInject<Inc<PieceComponent, IsMatchComponent, PieceTileLinkComponent>, Exc<IsMovingComponent, ExpireComponent>> _isMatchFilter;
+        private EcsFilterInject<Inc<PieceComponent, IsMatchComponent, PieceTileLinkComponent>> _isMatchFilter;
 
         private EcsPoolInject<DestroyEntityCommand> _destroyEntityCommandPool;
         private EcsPoolInject<PieceTileLinkComponent> _pieceTileLinkPool;
 
         private EcsCustomInject<GridService> _gridService;
+        
+        private EcsCustomInject<TweenConfig> _tweenConfig;
         
         public void Run(EcsSystems systems)
         {
@@ -22,9 +24,6 @@ namespace Scripts.Features.Grid.Matching
             {
                 _destroyEntityCommandPool.Value.Add(pieceEntity) = new DestroyEntityCommand();
                 
-                _gridService.Value.UnlinkPieceFromTile(pieceEntity);
-
-
                 //TODO score and celebration
             }
         }

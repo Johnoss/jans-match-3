@@ -11,11 +11,10 @@ namespace Scripts.Features.Grid.Moving
         private EcsFilterInject<Inc<FallOccupantComponent>> _emptyFallingTiles;
 
         private EcsCustomInject<GridService> _gridService;
-        private EcsPoolInject<IsFallingComponent> _isFallingComponent;
+        private EcsPoolInject<FallPieceCommand> _fallPiecePool;
         
         public void Run(EcsSystems systems)
         {
-            return;
             SetupPiecesToFall();
         }
 
@@ -27,7 +26,7 @@ namespace Scripts.Features.Grid.Moving
                 var tileLinkComponent = _occupiedFallingTiles.Pools.Inc3.Get(tileEntity);
                 var pieceEntity = tileLinkComponent.LinkedEntity;
                 
-                if (_isFallingComponent.Value.Has(pieceEntity))
+                if (_fallPiecePool.Value.Has(pieceEntity))
                 {
                     continue;
                 }
@@ -36,18 +35,10 @@ namespace Scripts.Features.Grid.Moving
                 var fallDistance = emptyTiles.Count;
                 var fallCoordinates = tileComponent.Coordinates + Vector2Int.down * fallDistance;
                 
-                _isFallingComponent.Value.Add(pieceEntity) = new IsFallingComponent
+                _fallPiecePool.Value.Add(pieceEntity) = new FallPieceCommand
                 {
                     FallCoordinates = fallCoordinates,
                 };
-            }
-        }
-
-        private void ClearEmptyFallTiles()
-        {
-            foreach (var tileEntity in _emptyFallingTiles.Value)
-            {
-                _emptyFallingTiles.Pools.Inc1.Del(tileEntity);
             }
         }
     }
