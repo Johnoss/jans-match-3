@@ -29,7 +29,7 @@ namespace Scripts.Features.Grid.Moving
         [Header("Visual Feedback Tweens")]
         [Tooltip("DoPunchScale")]
         [SerializeField] private TweenSetting _hintTweenSetting;
-        [Tooltip("DoShakePosition")]
+        [Tooltip("DoShakeRotation")]
         [SerializeField] private TweenSetting _invalidSwapTweenSetting;
         
         public TweenSetting HintTweenSetting => _hintTweenSetting;
@@ -48,6 +48,8 @@ namespace Scripts.Features.Grid.Moving
         public LoopType LoopType = LoopType.Yoyo;
         
         [Tooltip("Anchor position, target punch scale, etc.")]
-        public Vector2 TargetVector;
+        public Vector3 TargetVector;
+        
+        public int VibrateCount;
     }
 }

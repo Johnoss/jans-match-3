@@ -32,7 +32,8 @@ namespace Scripts.Features.Piece
         
         private PieceSetting _pieceSetting;
 
-        private Tweener _cachedTween;
+        private Tweener _moveTweenCache;
+        private Tweener _shakeTweenCache;
 
         public RectTransform RectTransform => _rectTransform;
 
@@ -66,6 +67,28 @@ namespace Scripts.Features.Piece
         {
         }
 
+        public void StartMoveTween(TweenSetting tweenSetting, Vector2 targetAnchorPosition)
+        {
+            _moveTweenCache?.Kill();
+
+            _moveTweenCache = _tweenTarget.DOAnchorPos(targetAnchorPosition, tweenSetting.TweenDurationSeconds)
+                .SetDelay(tweenSetting.TweenDelaySeconds)
+                .SetEase(tweenSetting.Ease)
+                .SetLoops(tweenSetting.LoopCount, tweenSetting.LoopType);
+        }
+
+        public void StartInvalidMoveTween(TweenSetting tweenSetting)
+        {
+            _moveTweenCache?.Restart();
+            _shakeTweenCache?.Kill();
+
+            _shakeTweenCache = _rectTransform.DOShakeRotation(tweenSetting.TweenDurationSeconds, tweenSetting.TargetVector, tweenSetting.VibrateCount, 90f,
+                    true, ShakeRandomnessMode.Harmonic)
+                .SetDelay(tweenSetting.TweenDelaySeconds)
+                .SetEase(tweenSetting.Ease)
+                .SetLoops(tweenSetting.LoopCount, tweenSetting.LoopType);
+        }
+
         private void SetupVisuals()
         {
             var pieceTypeComponent = _world.GetPool<PieceTypeComponent>().Get(Entity);
@@ -76,15 +99,6 @@ namespace Scripts.Features.Piece
             _eyesImage.sprite = _pieceSetting.EyesSprite;
             _mouthImage.sprite = _pieceSetting.MouthSprite;
             _eyesImage.color = _pieceSetting.EyesTintColor;
-        }
-
-        public void StartMoveTween(TweenSetting tweenSetting, Vector2 targetAnchorPosition)
-        {
-            _cachedTween?.Kill();
-
-            _cachedTween = _tweenTarget.DOAnchorPos(targetAnchorPosition, tweenSetting.TweenDurationSeconds)
-                .SetEase(tweenSetting.Ease)
-                .SetLoops(tweenSetting.LoopCount, tweenSetting.LoopType);
         }
 
         public class ViewFactory : PlaceholderFactory<int, PieceEntityView>

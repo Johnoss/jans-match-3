@@ -14,6 +14,8 @@ namespace Scripts.Features.Input
         
         private readonly EcsFilterInject<Inc<UserInteractingComponent, TileViewLinkComponent>, Exc<IsMovingComponent, SpawnTargetComponent>> _isInteractingFilter;
         
+        private EcsFilterInject<Inc<SwapPieceComponent>> _swapPieceFilter;
+        
         private readonly EcsPoolInject<UserInteractingComponent> _userInteractingPool;
         private readonly EcsPoolInject<SwapPieceComponent> _swapPieceCommandPool;
         private readonly EcsPoolInject<PieceTileLinkComponent> _pieceTileLinkPool;
@@ -26,6 +28,13 @@ namespace Scripts.Features.Input
         {
             if(_isInteractingFilter.Value.GetEntitiesCount() == 0)
             {
+                return;
+            }
+            
+            if(_swapPieceFilter.Value.GetEntitiesCount() > 0)
+            {
+                //already swapping
+                ClearInteraction();
                 return;
             }
             

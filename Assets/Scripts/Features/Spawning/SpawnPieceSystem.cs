@@ -19,6 +19,13 @@ namespace Scripts.Features.Spawning
             foreach (var spawnTileEntity in _spawnTargetsFilter.Value)
             {
                 var spawnComponent = _spawnTargetsFilter.Pools.Inc1.Get(spawnTileEntity);
+                
+                //TODO temporarily disabled
+                if (!spawnComponent.ForbidMatches)
+                {
+                    return;
+                }
+                
                 _pieceService.Value.CreateRandomPieceEntity(spawnTileEntity, spawnComponent.ForbidMatches);
                 
                 _spawnTargetsFilter.Pools.Inc1.Del(spawnTileEntity);

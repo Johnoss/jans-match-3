@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using Leopotam.EcsLite;
+using Scripts.Features.Grid.Moving;
+using Scripts.Features.Time;
 
 namespace Scripts.Utils
 {
@@ -33,6 +35,17 @@ namespace Scripts.Utils
                 systems.Add(system);
             }
             return systems;
+        }
+        
+        public static void UpdateTime<TComponent>(this EcsPool<TComponent> pool, int entity) where TComponent : struct, ITimeComponent
+        {
+            ref var component = ref pool.Get(entity);
+            component.RemainingSeconds -= UnityEngine.Time.deltaTime;
+            
+            if (component.RemainingSeconds <= 0)
+            {
+                pool.Del(entity);
+            }
         }
     }
 }

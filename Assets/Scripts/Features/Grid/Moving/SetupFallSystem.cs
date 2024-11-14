@@ -15,6 +15,7 @@ namespace Scripts.Features.Grid.Moving
         
         public void Run(EcsSystems systems)
         {
+            return;
             SetupPiecesToFall();
             ClearEmptyFallTiles();
         }
