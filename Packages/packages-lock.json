@@ -14,6 +14,13 @@
       "dependencies": {},
       "hash": "e70e4f982cb324204f80a60516a4a7dda5620aa3"
     },
+    "com.leoecscommunity.ecslite.extendedsystems": {
+      "version": "https://github.com/LeoECSCommunity/ecslite-extendedsystems.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "1e4cdd6922538c67affa97367f0caf8f6c8e9286"
+    },
     "com.leoecscommunity.ecslite.unityeditor": {
       "version": "https://github.com/LeoECSCommunity/ecslite-unityeditor.git",
       "depth": 0,

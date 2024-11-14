@@ -28,8 +28,6 @@ namespace Scripts.Features.Spawning
                 
                 _pieceService.Value.CreateRandomPieceEntity(spawnTileEntity, spawnComponent.ForbidMatches);
                 
-                _spawnTargetsFilter.Pools.Inc1.Del(spawnTileEntity);
-                
                 _matchingService.Value.SetBoardDirty();
             }
         }

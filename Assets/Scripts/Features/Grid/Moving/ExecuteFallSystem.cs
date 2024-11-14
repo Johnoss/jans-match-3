@@ -24,8 +24,6 @@ namespace Scripts.Features.Grid.Moving
                 var targetTile = _gridService.Value.GetTileEntity(targetCoordinates);
                 
                 _moveService.Value.SetupMovePieceCommand(pieceEntity, targetTile, MoveType.Fall);
-                
-                _fallingPiecesFilter.Pools.Inc1.Del(pieceEntity);
             }
         }
     }

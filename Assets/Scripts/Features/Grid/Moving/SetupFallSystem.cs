@@ -17,7 +17,6 @@ namespace Scripts.Features.Grid.Moving
         {
             return;
             SetupPiecesToFall();
-            ClearEmptyFallTiles();
         }
 
         private void SetupPiecesToFall()

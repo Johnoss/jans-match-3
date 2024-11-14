@@ -1,5 +1,6 @@
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
+using Leopotam.EcsLite.ExtendedSystems;
 using Scripts.Features.Grid;
 using Scripts.Features.Grid.Matching;
 using Scripts.Features.Grid.Moving;
@@ -37,16 +38,23 @@ namespace Initialization.ECS
                 .Add(new ExpireSystem())
                 .Add(new InputSystem())
                 .Add(new SetupMoveSystem(), new StartMoveSystem(), new CompleteMoveSystem())
-                .Add(new SwapPiecesSystem(), new ValidateSwapSystem())
                 .Add(new DetermineMatchesSystem(), new CollectMatchesSystem())
+                .Add(new SwapPiecesSystem(), new ValidateSwapSystem())
                 .Add(new DetermineFallSystem(), new SetupFallSystem(), new ExecuteFallSystem())
                 .Add(new FillEmptyTilesSystem(), new SpawnPieceSystem())
-                
                 
                 .Add(new DestroyEntitySystem())
                 
                 .Add(new ValidatePossibleMovesSystem())
-                .Add(new ShuffleBoardSystem());
+                .Add(new ShuffleBoardSystem())
+                
+                .DelHere<MoveCompleteComponent>()
+                .DelHere<IsFallingComponent>()
+                .DelHere<SpawnTargetComponent>()
+                .DelHere<DestroyEntityCommand>()
+                .DelHere<FallOccupantComponent>()
+                .DelHere<IsMatchComponent>()
+                ;
                 
                 _systems
                     .Inject(GetInjectables())

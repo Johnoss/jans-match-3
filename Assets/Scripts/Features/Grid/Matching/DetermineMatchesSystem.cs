@@ -23,7 +23,6 @@ namespace Scripts.Features.Grid.Matching
             foreach (var pieceEntity in _moveCompleteFilter.Value)
             {
                 var pieceTileLinkComponent = _moveCompleteFilter.Pools.Inc3.Get(pieceEntity);
-                _moveCompleteFilter.Pools.Inc1.Del(pieceEntity);
                 
                 var tileEntity = pieceTileLinkComponent.LinkedEntity;
                 

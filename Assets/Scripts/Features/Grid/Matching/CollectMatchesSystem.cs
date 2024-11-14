@@ -20,8 +20,6 @@ namespace Scripts.Features.Grid.Matching
         {
             foreach (var pieceEntity in _isMatchFilter.Value)
             {
-                _isMatchFilter.Pools.Inc2.Del(pieceEntity);
-                
                 _destroyEntityCommandPool.Value.Add(pieceEntity) = new DestroyEntityCommand();
                 
                 _gridService.Value.UnlinkPieceFromTile(pieceEntity);
