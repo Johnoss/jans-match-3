@@ -1,5 +1,6 @@
 using Leopotam.EcsLite;
 using Scripts.Features.Grid;
+using Scripts.Utils;
 using UnityEngine;
 using Zenject;
 
@@ -29,14 +30,6 @@ namespace Scripts.Features.Input
             InitializeGridMetrics();
         }
 
-        private void InitializeGridMetrics()
-        {
-            _gridResolution = _gridConfig.GridResolution;
-            _tileSize = _gridConfig.TileSize;
-
-            _gridOriginOffset = new Vector2(-(_gridResolution.x * _tileSize.x * TilesParent.pivot.x), -(_gridResolution.y * _tileSize.y * TilesParent.pivot.y));
-        }
-
         public bool IsPointerOverTile(Vector3 screenPointerPosition, out Vector2Int tileCoordinates)
         {
             tileCoordinates = Vector2Int.zero;
@@ -58,6 +51,27 @@ namespace Scripts.Features.Input
 
             tileCoordinates = new Vector2Int(x, y);
             return true;
+        }
+
+        public void ToggleContinuousInteractionBlock(bool isBlocked)
+        {
+            var blockInteractionPool = _world.GetPool<BlockContinuousInputComponent>();
+            if (isBlocked)
+            {
+                blockInteractionPool.AddOrSkip(InputEntity);
+            }
+            else
+            {
+                blockInteractionPool.DelOrSkip(InputEntity);
+            }
+        }
+
+        private void InitializeGridMetrics()
+        {
+            _gridResolution = _gridConfig.GridResolution;
+            _tileSize = _gridConfig.TileSize;
+
+            _gridOriginOffset = new Vector2(-(_gridResolution.x * _tileSize.x * TilesParent.pivot.x), -(_gridResolution.y * _tileSize.y * TilesParent.pivot.y));
         }
     }
 }

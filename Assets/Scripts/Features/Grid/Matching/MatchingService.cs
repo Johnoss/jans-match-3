@@ -27,8 +27,8 @@ namespace Scripts.Features.Grid.Matching
         
         public void SetBoardDirty()
         {
-            _world.GetPool<FoundPossibleMovesComponent>().DeleteComponent(_possibleMovesEntity);
-            _world.GetPool<NoPossibleMovesComponent>().DeleteComponent(_possibleMovesEntity);
+            _world.GetPool<FoundPossibleMovesComponent>().DelOrSkip(_possibleMovesEntity);
+            _world.GetPool<NoPossibleMovesComponent>().DelOrSkip(_possibleMovesEntity);
             
             RestartCheckingPossibleMoves();
         }

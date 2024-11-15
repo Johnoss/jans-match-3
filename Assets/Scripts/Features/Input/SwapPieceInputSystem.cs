@@ -18,7 +18,7 @@ namespace Scripts.Features.Input
         
         private readonly EcsPoolInject<SwapPieceComponent> _swapPiecePool;
         private readonly EcsPoolInject<PieceTileLinkComponent> _pieceTileLinkPool;
-        private readonly EcsPoolInject<BlockInputComponent> _blockInputPool;
+        private readonly EcsPoolInject<BlockContinuousInputComponent> _blockInputPool;
         
         private readonly EcsCustomInject<EcsWorld> _world;
         private readonly EcsCustomInject<GridService> _gridService;
@@ -63,6 +63,12 @@ namespace Scripts.Features.Input
                 {
                     SetupSwapPieces();
                 }
+                
+                if(_selectedPieceEntities.Count > MAX_INTERACTED_TILES)
+                {
+                    ClearInteraction();
+                    return;
+                }
             }
         }
 
@@ -104,11 +110,12 @@ namespace Scripts.Features.Input
 
         private void ClearInteraction()
         {
-            _blockInputPool.Value.AddOrSkip(_inputService.Value.InputEntity);
             foreach (var entity in _selectedPieceFilter.Value)
             {
                 _selectedPieceFilter.Pools.Inc1.Del(entity);
             }
+
+            _inputService.Value.ToggleContinuousInteractionBlock(true);
         }
     }
 }

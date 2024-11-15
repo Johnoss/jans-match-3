@@ -37,7 +37,7 @@ namespace Scripts.Features.Input
                 if (_invalidSwapPool.Value.Has(entity) || _isMatchPool.Value.Has(targetPieceEntity) || _isMatchPool.Value.Has(entity))
                 {
                     _swapPiecePool.Value.Del(entity);
-                    _invalidSwapPool.Value.DeleteComponent(entity);
+                    _invalidSwapPool.Value.DelOrSkip(entity);
                 }
                 else
                 {

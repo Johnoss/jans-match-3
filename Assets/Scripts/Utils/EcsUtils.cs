@@ -14,7 +14,7 @@ namespace Scripts.Utils
             return ref pool.Has(entity) ? ref pool.Get(entity) : ref pool.Add(entity);
         }
         
-        public static void DeleteComponent<T>(this EcsPool<T> pool, int entity) where T : struct
+        public static void DelOrSkip<T>(this EcsPool<T> pool, int entity) where T : struct
         {
             if (pool.Has(entity))
             {

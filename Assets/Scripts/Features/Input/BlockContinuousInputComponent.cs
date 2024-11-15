@@ -1,6 +1,6 @@
 namespace Scripts.Features.Input
 {
-    public struct BlockInputComponent
+    public struct BlockContinuousInputComponent
     {
     }
 }

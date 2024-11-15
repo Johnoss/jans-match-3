@@ -134,7 +134,7 @@ namespace Scripts.Features.Grid
             }
             
             var currentTileEntity = pieceTileLinkPool.Get(pieceEntity).LinkedEntity;
-            pieceTileLinkPool.DeleteComponent(currentTileEntity);
+            pieceTileLinkPool.DelOrSkip(currentTileEntity);
         }
         
         public IEnumerable<Vector2Int> GetShuffledTileCoordinates()

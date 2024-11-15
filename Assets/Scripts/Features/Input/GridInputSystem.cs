@@ -9,8 +9,10 @@ namespace Scripts.Features.Input
 {
     public class GridInputSystem : IEcsRunSystem
     {
-        private EcsFilterInject<Inc<GridInputComponent>, Exc<BlockInputComponent>> _gridInputFilter;
-        private EcsFilterInject<Inc<BlockInputComponent>> _blockInputFilter;
+        private EcsFilterInject<Inc<GridInputComponent>, Exc<BlockContinuousInputComponent>> _gridInputFilter;
+        private EcsFilterInject<Inc<BlockContinuousInputComponent>> _blockInputFilter;
+        private EcsFilterInject<Inc<SelectedPieceComponent>> _selectedPieceFilter;
+        
         
         private EcsPoolInject<PieceTileLinkComponent> _pieceTileLinkPool;
         private EcsPoolInject<SelectedPieceComponent> _selectedPiecePool;
@@ -28,16 +30,14 @@ namespace Scripts.Features.Input
 
         private void TryUnblockInput()
         {
-            foreach (var entity in _blockInputFilter.Value)
+            if (UnityEngine.Input.GetMouseButton(0) || UnityEngine.Input.touchCount != 0)
             {
-                if (UnityEngine.Input.GetMouseButtonDown(0) || UnityEngine.Input.touchCount != 0)
-                {
-                    return;
-                }
-                
-                //mouse/finger released, we can interact again (prevents swapping while dragging)
-                _blockInputFilter.Pools.Inc1.Del(entity);
+                return;
             }
+            
+            //mouse/finger released, we can interact again (prevents continuous swapping while dragging)
+            _inputService.Value.ToggleContinuousInteractionBlock(false);
+            ClearInteraction();
         }
 
         private void DetermineGridInput()
@@ -87,6 +87,14 @@ namespace Scripts.Features.Input
             
             var pieceEntity = _pieceTileLinkPool.Value.Get(tileEntity).LinkedEntity;
             _selectedPiecePool.Value.AddOrSkip(pieceEntity);
+        }
+
+        private void ClearInteraction()
+        {
+            foreach (var entity in _selectedPieceFilter.Value)
+            {
+                _selectedPieceFilter.Pools.Inc1.Del(entity);
+            }
         }
     }
 }
