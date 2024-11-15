@@ -57,6 +57,7 @@ namespace Scripts.Features.Grid.Moving
                 MoveType.Swap => _tweenConfig.Value.SwapTweenSetting,
                 MoveType.RevertSwap => _tweenConfig.Value.RevertTweenSetting,
                 MoveType.Fall => _tweenConfig.Value.FallTweenSetting,
+                MoveType.Shuffle => _tweenConfig.Value.FallTweenSetting,
                 _ => throw new ArgumentOutOfRangeException(nameof(moveType), moveType, null)
             };
             view.StartMoveTween(tweenSetting, target, out tweenDurationSeconds);

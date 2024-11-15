@@ -5,5 +5,6 @@ namespace Scripts.Features.Grid.Moving
         Swap,
         RevertSwap,
         Fall,
+        Shuffle
     }
 }

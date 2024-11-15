@@ -44,7 +44,7 @@ namespace Initialization.ECS
                 .Add(new GridInputSystem(), new SwapPieceInputSystem())
                 .Add(new DetermineFallSystem(), new SetupFallSystem(), new ExecuteFallSystem())
                 .Add(new SetupMoveSystem(), new StartMoveSystem(), new CompleteMoveSystem())
-                .Add(new FillEmptyTilesSystem(), new SpawnPieceSystem())
+                .Add(new SpawnPieceSystem())
                 .Add(new DetermineMatchesSystem(), new CollectMatchesSystem())
                 .Add(new SwapPiecesSystem(), new ValidateSwapSystem())
 

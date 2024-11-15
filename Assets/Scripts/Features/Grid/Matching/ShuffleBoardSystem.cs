@@ -17,6 +17,7 @@ namespace Scripts.Features.Grid.Matching
         private EcsPoolInject<IsMovingComponent> _moveToTilePool;
         
         private EcsCustomInject<GridService> _gridService;
+        private EcsCustomInject<MoveService> _moveService;
         
         public void Run(EcsSystems systems)
         {
@@ -40,10 +41,10 @@ namespace Scripts.Features.Grid.Matching
             foreach (var pieceEntity in _piecesFilter.Value)
             {
                 var targetCoordinates = shuffledCoordinatesQueue.Dequeue();
+                var targetTileEntity = _gridService.Value.GetTileEntity(targetCoordinates);
                 
+                _moveService.Value.SetupMovePieceCommand(pieceEntity, targetTileEntity, MoveType.Shuffle);
                 _gridService.Value.SetTilePieceLink(targetCoordinates, pieceEntity);
-                
-                _moveToTilePool.Value.Add(pieceEntity) = new IsMovingComponent();
             }
         }
     }
