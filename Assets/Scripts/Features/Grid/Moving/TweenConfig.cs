@@ -1,5 +1,3 @@
-using System;
-using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -34,22 +32,11 @@ namespace Scripts.Features.Grid.Moving
         
         public TweenSetting HintTweenSetting => _hintTweenSetting;
         public TweenSetting InvalidSwapTweenSetting => _invalidSwapTweenSetting;
-    }
 
-    [Serializable]
-    public class TweenSetting
-    {
-        public float TweenDurationSeconds = 1f;
-        public float TweenDelaySeconds;
-        public Ease Ease = Ease.InSine;
-        public bool IsSpeedBased;
+        [Header("Launch Tweens")]
+        [Tooltip("DoSizeDelta on the mask.")]
+        [SerializeField] private TweenSetting _gridLaunchTweenSetting;
         
-        public int LoopCount = 1;
-        public LoopType LoopType = LoopType.Yoyo;
-        
-        [Tooltip("Anchor position, target punch scale, etc.")]
-        public Vector3 TargetVector;
-        
-        public int VibrateCount;
+        public TweenSetting GridLaunchTweenSetting => _gridLaunchTweenSetting;
     }
 }

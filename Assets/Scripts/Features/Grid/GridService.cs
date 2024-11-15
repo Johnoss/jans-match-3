@@ -27,7 +27,7 @@ namespace Scripts.Features.Grid
         
         public void SetupGrid()
         {
-            _gridView.SetupBoard();
+            _gridView.SetupGridView();
             var gridEntity = _world.NewEntity();
             _world.GetPool<GridComponent>().Add(gridEntity) = new GridComponent();
             
@@ -145,19 +145,7 @@ namespace Scripts.Features.Grid
         public Vector2 GetTileAnchorPosition(int tileEntity)
         {
             var tileComponent = _world.GetPool<TileComponent>().Get(tileEntity);
-            return GetTileAnchorPosition(tileComponent.Coordinates);
-        }
-        
-        public Vector2 GetTileAnchorPosition(Vector2Int coordinates)
-        {
-            var resolution = _gridConfig.GridResolution;
-            var tileSize = _gridConfig.TileSize;
-            var boardSize = new Vector2(resolution.x * tileSize.x, resolution.y * tileSize.y);
-            
-            return new Vector2(
-                coordinates.x * tileSize.x - boardSize.x / 2 + tileSize.x / 2,
-                coordinates.y * tileSize.y - boardSize.y / 2 + tileSize.y / 2
-            );
+            return _gridConfig.GetTileAnchorPosition(tileComponent.Coordinates);
         }
 
         private void CreateTiles()
@@ -166,28 +154,31 @@ namespace Scripts.Features.Grid
             {
                 for (var column = 0; column < _gridConfig.GridResolution.x; column++)
                 {
-                    var tileEntity = CreateTileEntity(new Vector2Int(column, row));
+                    var coordinates = new Vector2Int(column, row);
+                    var tileEntity = CreateTileEntity(coordinates);
                     _tileEntities[column, row] = tileEntity;
                     
-                    var tileView = _tileViewFactory.Create(tileEntity);
-                    
-                    CreateEntityViewLink(tileView, tileEntity);
-                    
-                    _world.GetPool<ViewComponent>().Add(tileEntity) = new ViewComponent
-                    {
-                        View = tileView,
-                    };
+                    CreateTileView(tileEntity, coordinates);
                 }
             }
             SetupNeighbours();
         }
 
-        private void CreateEntityViewLink(TileView tileView, int tileEntity)
+        private void CreateTileView(int tileEntity, Vector2Int coordinates)
         {
+            var tileView = _tileViewFactory.Create(tileEntity);
             _world.GetPool<TileViewLinkComponent>().Add(tileEntity) = new TileViewLinkComponent
             {
                 View = tileView,
             };
+            
+            _world.GetPool<ViewComponent>().Add(tileEntity) = new ViewComponent
+            {
+                View = tileView,
+            };
+            
+            tileView.RectTransform.anchoredPosition = _gridConfig.GetTileAnchorPosition(coordinates);
+            tileView.RectTransform.sizeDelta = _gridConfig.TileSize;
         }
 
         private void SetupNeighbours()

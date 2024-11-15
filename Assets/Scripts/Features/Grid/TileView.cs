@@ -28,6 +28,8 @@ namespace Scripts.Features.Grid
         private EcsPool<UserInteractingComponent> _userInteractingPool;
         private EcsWorld _world;
 
+        public RectTransform RectTransform => _rectTransform;
+        
         [Inject]
         public void Construct(int entity, GridConfig gridConfig, EcsWorld world)
         {

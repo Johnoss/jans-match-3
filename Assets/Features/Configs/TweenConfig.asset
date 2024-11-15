@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TweenConfig
   m_EditorClassIdentifier: 
   _fallTweenSetting:
-    TweenDurationSeconds: 0.35
+    TweenDurationSeconds: 0.7
     TweenDelaySeconds: 0.05
     Ease: 27
     IsSpeedBased: 0
@@ -22,7 +22,7 @@ MonoBehaviour:
     TargetVector: {x: 0, y: 0, z: 0}
     VibrateCount: 0
   _swapTweenSetting:
-    TweenDurationSeconds: 0.3
+    TweenDurationSeconds: 0.6
     TweenDelaySeconds: 0
     Ease: 28
     IsSpeedBased: 0
