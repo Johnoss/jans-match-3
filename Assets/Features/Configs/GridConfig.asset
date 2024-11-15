@@ -12,11 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c89509608d046339b1894ae27ea8c89, type: 3}
   m_Name: GridConfig
   m_EditorClassIdentifier: 
-  _gridResolution: {x: 15, y: 15}
+  _gridResolution: {x: 5, y: 7}
   _neighboringOffsets:
   - {x: 0, y: 1}
   - {x: 1, y: 0}
   - {x: 0, y: -1}
   - {x: -1, y: 0}
-  _tileSize: {x: 50, y: 50}
+  _tileSize: {x: 100, y: 100}
   _tilePrefab: {fileID: 6183156859451603534, guid: e892dff0c04088e4683dabff875716ba, type: 3}

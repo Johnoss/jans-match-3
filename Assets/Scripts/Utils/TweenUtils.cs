@@ -1,26 +1,27 @@
-using Scripts.Features.Grid.Moving;
+using DG.Tweening;
+using Scripts.Features.Tweening;
 using UnityEngine;
 
 namespace Scripts.Utils
 {
     public static class TweenUtils
     {
-        public static float GetTweenDuration(this TweenSetting tweenSetting, float? distance = null)
+        public static float GetMaxTweenSeconds(this TweenSetting tweenSetting)
         {
-            var baseDuration = tweenSetting.TweenDelaySeconds;
-            
-            if (!tweenSetting.IsSpeedBased)
+            if (tweenSetting.IsSpeedBased)
             {
-                return (baseDuration + tweenSetting.TweenDurationSeconds) * tweenSetting.LoopCount;
+                Debug.LogWarning("Speed based tweens are not supported for calculating max duration.");
             }
             
-            if (distance.HasValue)
-            {
-                return baseDuration + distance.Value / tweenSetting.TweenDurationSeconds;
-            }
-                
-            Debug.LogError("Distance is not set for speed based tween");
-            return baseDuration;
+            return tweenSetting.TweenDurationSeconds * tweenSetting.LoopCount + tweenSetting.RandomDelayRange.y;
+        }
+        
+        public static Tweener DecorateTween(this Tweener tweener, TweenSetting tweenSetting)
+        {
+            return tweener
+                .SetEase(tweenSetting.Ease)
+                .SetLoops(tweenSetting.LoopCount, tweenSetting.LoopType)
+                .SetDelay(tweenSetting.DelaySecondsFromRange);
         }
     }
 }

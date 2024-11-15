@@ -1,5 +1,6 @@
 using DG.Tweening;
 using Scripts.Features.Grid.Moving;
+using Scripts.Features.Tweening;
 using Scripts.Utils;
 using UnityEngine;
 using Zenject;
@@ -37,7 +38,7 @@ namespace Scripts.Features.Grid
             _maskRectTransform.sizeDelta = Vector2.zero;
             _startTweener = _maskRectTransform.DOSizeDelta(targetSizeDelta, tweenSetting.TweenDurationSeconds)
                 .SetLoops(tweenSetting.LoopCount, tweenSetting.LoopType)
-                .SetDelay(tweenSetting.TweenDelaySeconds)
+                .SetDelay(tweenSetting.DelaySecondsFromRange)
                 .SetEase(tweenSetting.Ease);
         }
     }

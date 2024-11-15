@@ -9,7 +9,7 @@ namespace Scripts.Features.Input
 {
     public class SwapPiecesSystem : IEcsRunSystem
     {
-        private readonly EcsFilterInject<Inc<SwapPieceComponent, PieceTileLinkComponent, PieceViewLinkComponent>, Exc<ExpireComponent>> _swapPieceFilter;
+        private readonly EcsFilterInject<Inc<SwapPieceComponent, PieceTileLinkComponent, PieceViewLinkComponent>, Exc<ExpireComponent, IsTweeningComponent>> _swapPieceFilter;
         
         private readonly EcsPoolInject<PieceTileLinkComponent> _pieceTileLinkPool;
         private readonly EcsPoolInject<InvalidSwapComponent> _invalidSwapPool;

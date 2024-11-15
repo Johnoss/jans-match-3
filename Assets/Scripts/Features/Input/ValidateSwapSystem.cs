@@ -4,6 +4,7 @@ using Scripts.Features.Grid.Matching;
 using Scripts.Features.Grid.Moving;
 using Scripts.Features.Piece;
 using Scripts.Features.Time;
+using Scripts.Features.Tweening;
 using Scripts.Utils;
 using UnityEngine;
 
@@ -65,9 +66,8 @@ namespace Scripts.Features.Input
             var viewLinkComponent = _pieceViewLinkPool.Value.Get(entity);
 
             var tweenSetting = _tweenConfig.Value.InvalidSwapTweenSetting;
-            var durationSeconds = tweenSetting.GetTweenDuration();
             
-            viewLinkComponent.View.StartInvalidMoveTween(tweenSetting);
+            viewLinkComponent.View.StartInvalidMoveTween(tweenSetting, out var durationSeconds);
 
             ref var isTweeningComponent = ref _isTweeningComponent.Value.GetOrAddComponent(entity);
             isTweeningComponent.RemainingSeconds = durationSeconds;

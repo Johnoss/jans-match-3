@@ -4,6 +4,7 @@ using Leopotam.EcsLite.Di;
 using Scripts.Features.Input;
 using Scripts.Features.Piece;
 using Scripts.Features.Time;
+using Scripts.Features.Tweening;
 using Scripts.Utils;
 using UnityEngine;
 
@@ -16,6 +17,7 @@ namespace Scripts.Features.Grid.Moving
         private EcsPoolInject<ExpireComponent> _expirePool;
         private EcsPoolInject<TileViewLinkComponent> _tileViewLinkPool;
         private EcsPoolInject<IsMovingComponent> _isMovingPool;
+        private EcsPoolInject<IsTweeningComponent> _isTweeningPool;
 
         private EcsCustomInject<GridService> _gridService;
         private EcsCustomInject<MoveService> _moveService;
@@ -44,8 +46,8 @@ namespace Scripts.Features.Grid.Moving
             var targetAnchorPosition = _gridService.Value.GetTileAnchorPosition(startMovePieceCommand.TargetTileEntity);
             StartMoveTween(pieceViewLinkComponent.View, targetAnchorPosition, startMovePieceCommand.MoveType, out var tweenDurationSeconds);
             
-            ref var expireComponent = ref _expirePool.Value.GetOrAddComponent(pieceEntity);
-            expireComponent.RemainingSeconds = tweenDurationSeconds;
+            ref var tweeningComponent = ref _isTweeningPool.Value.GetOrAddComponent(pieceEntity);
+            tweeningComponent.RemainingSeconds = tweenDurationSeconds;
         }
 
         private void StartMoveTween(PieceEntityView view, Vector2 target, MoveType moveType, out float tweenDurationSeconds)
@@ -57,9 +59,7 @@ namespace Scripts.Features.Grid.Moving
                 MoveType.Fall => _tweenConfig.Value.FallTweenSetting,
                 _ => throw new ArgumentOutOfRangeException(nameof(moveType), moveType, null)
             };
-
-            tweenDurationSeconds = tweenSetting.GetTweenDuration();
-            view.StartMoveTween(tweenSetting, target);
+            view.StartMoveTween(tweenSetting, target, out tweenDurationSeconds);
         }
     }
 }

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
 using Scripts.Features.Grid.Moving;
+using Scripts.Features.Tweening;
 using Scripts.Features.Piece;
 using UnityEngine;
 

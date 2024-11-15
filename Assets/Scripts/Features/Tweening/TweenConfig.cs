@@ -1,9 +1,7 @@
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace Scripts.Features.Grid.Moving
+namespace Scripts.Features.Tweening
 {
-    [CreateAssetMenu(menuName = "Create TweenConfig", fileName = "TweenConfig", order = 0)]
     public class TweenConfig : ScriptableObject
     { 
         [Header("Move Piece Tweens")]

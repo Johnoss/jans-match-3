@@ -1,6 +1,7 @@
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
 using Scripts.Features.Grid.Moving;
+using Scripts.Features.Tweening;
 using Scripts.Features.Spawning;
 using Scripts.Features.Time;
 using Scripts.Utils;

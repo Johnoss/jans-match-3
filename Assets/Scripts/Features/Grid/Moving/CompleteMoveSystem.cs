@@ -10,7 +10,7 @@ namespace Scripts.Features.Grid.Moving
 {
     public class CompleteMoveSystem : IEcsRunSystem
     {
-        private EcsFilterInject<Inc<PieceViewLinkComponent, PieceTileLinkComponent, IsMovingComponent>, Exc<ExpireComponent>> _moveCompleteFilter;
+        private EcsFilterInject<Inc<PieceViewLinkComponent, PieceTileLinkComponent, IsMovingComponent>, Exc<ExpireComponent, IsTweeningComponent>> _moveCompleteFilter;
         
         private EcsPoolInject<MoveCompleteComponent> _moveCompletePool;
 

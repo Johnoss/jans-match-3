@@ -25,6 +25,11 @@ namespace Scripts.Utils
             return _random.NextInt(min, max);
         }
         
+        public static float GetRandomFloat(this Vector2 range)
+        {
+            return _random.NextFloat(range.x, range.y);
+        }
+        
         public static IEnumerable<Vector2Int> GetShuffledCoordinates(this Vector2Int gridResolution)
         {
             var coordinates = Enumerable.Range(0, gridResolution.x)

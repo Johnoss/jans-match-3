@@ -2,11 +2,8 @@ using DG.Tweening;
 using Leopotam.EcsLite;
 using MVC;
 using Scripts.Features.Grid;
-using Scripts.Features.Grid.Moving;
-using UniRx;
-using UniRx.Triggers;
+using Scripts.Features.Tweening;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using Zenject;
 
@@ -21,9 +18,10 @@ namespace Scripts.Features.Piece
         [SerializeField] private Image _eyesImage;
         [SerializeField] private Image _mouthImage;
 
-        [Header("Tween Target")]
-        [SerializeField] private RectTransform _tweenTarget;
-        
+        [Header("Tweens")]
+        [SerializeField] private AnchorPositionTweenView _moveTweenView;
+        [SerializeField] private ShakeRotationTweenView _invalidMoveTweenView;
+        [SerializeField] private PulseScaleTween _hintTweenView;
         
         private EntityViewPool<PieceEntityView> _entityViewPool;
         private PieceConfig _pieceConfig;
@@ -65,28 +63,24 @@ namespace Scripts.Features.Piece
 
         public override void DisableView()
         {
+            _moveTweenView.ResetTween();
+            _invalidMoveTweenView.ResetTween();
+            _hintTweenView.ResetTween();
         }
 
-        public void StartMoveTween(TweenSetting tweenSetting, Vector2 targetAnchorPosition)
+        public void StartMoveTween(TweenSetting tweenSetting, Vector2 targetAnchorPosition, out float seconds)
         {
-            _moveTweenCache?.Kill();
-
-            _moveTweenCache = _tweenTarget.DOAnchorPos(targetAnchorPosition, tweenSetting.TweenDurationSeconds)
-                .SetDelay(tweenSetting.TweenDelaySeconds)
-                .SetEase(tweenSetting.Ease)
-                .SetLoops(tweenSetting.LoopCount, tweenSetting.LoopType);
+            _moveTweenView.PlayTween(tweenSetting, targetAnchorPosition, out seconds);
         }
 
-        public void StartInvalidMoveTween(TweenSetting tweenSetting)
+        public void StartInvalidMoveTween(TweenSetting tweenSetting, out float totalSeconds)
         {
-            _moveTweenCache?.Restart();
-            _shakeTweenCache?.Kill();
-
-            _shakeTweenCache = _rectTransform.DOShakeRotation(tweenSetting.TweenDurationSeconds, tweenSetting.TargetVector, tweenSetting.VibrateCount, 90f,
-                    true, ShakeRandomnessMode.Harmonic)
-                .SetDelay(tweenSetting.TweenDelaySeconds)
-                .SetEase(tweenSetting.Ease)
-                .SetLoops(tweenSetting.LoopCount, tweenSetting.LoopType);
+            _invalidMoveTweenView.PlayTween(tweenSetting, out totalSeconds);
+        }
+        
+        public void StartHintTween(TweenSetting tweenSetting, out float seconds)
+        {
+            _hintTweenView.PlayTween(tweenSetting, out seconds);
         }
 
         private void SetupVisuals()
