@@ -23,9 +23,13 @@ namespace Initialization.ECS
         [Inject] private MatchingService _matchingService;
         [Inject] private PieceService _pieceService;
         [Inject] private MoveService _moveService;
+        [Inject] private InputService _inputService;
         
         [Inject] private RulesConfig _rulesConfig;
         [Inject] private TweenConfig _tweenConfig;
+        [Inject] private GridConfig _gridConfig;
+        
+        [Inject] private GridView _gridView;
         
         private EcsSystems _systems;
         
@@ -37,25 +41,24 @@ namespace Initialization.ECS
                 .Add(new Leopotam.EcsLite.UnityEditor.EcsWorldDebugSystem(null, true, entityNameFormat: "D"))
 #endif
                 .Add(new ExpireSystem())
-                .Add(new InputSystem())
+                .Add(new GridInputSystem(), new SwapPieceInputSystem())
                 .Add(new DetermineFallSystem(), new SetupFallSystem(), new ExecuteFallSystem())
                 .Add(new SetupMoveSystem(), new StartMoveSystem(), new CompleteMoveSystem())
                 .Add(new FillEmptyTilesSystem(), new SpawnPieceSystem())
                 .Add(new DetermineMatchesSystem(), new CollectMatchesSystem())
                 .Add(new SwapPiecesSystem(), new ValidateSwapSystem())
-                
+
                 .Add(new DestroyEntitySystem())
-                
+
                 .Add(new ValidatePossibleMovesSystem())
                 .Add(new ShuffleBoardSystem())
-                
+
                 .DelHere<MoveCompleteComponent>()
                 .DelHere<FallPieceCommand>()
                 .DelHere<SpawnTargetComponent>()
                 .DelHere<DestroyEntityCommand>()
                 .DelHere<FallOccupantComponent>()
-                .DelHere<IsMatchComponent>()
-                ;
+                .DelHere<IsMatchComponent>();
                 
                 _systems
                     .Inject(GetInjectables())
@@ -75,9 +78,13 @@ namespace Initialization.ECS
                 _matchingService,
                 _pieceService,
                 _moveService,
+                _inputService,
                 
                 _rulesConfig,
                 _tweenConfig,
+                _gridConfig,
+                
+                _gridView,
             };
         }
         

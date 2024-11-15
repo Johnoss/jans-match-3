@@ -1,6 +1,7 @@
 using Scripts.Features.Grid;
 using Scripts.Features.Grid.Matching;
 using Scripts.Features.Grid.Moving;
+using Scripts.Features.Input;
 using Scripts.Features.Piece;
 using UnityEngine;
 using Zenject;
@@ -25,6 +26,7 @@ namespace Initialization
             Container.Bind<GridService>().AsSingle();
             Container.Bind<MatchingService>().AsSingle();
             Container.Bind<MoveService>().AsSingle();
+            Container.Bind<InputService>().AsSingle();
         }
     }
 }

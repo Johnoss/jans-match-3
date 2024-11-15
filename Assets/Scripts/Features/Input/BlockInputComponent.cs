@@ -1,6 +1,6 @@
 namespace Scripts.Features.Input
 {
-    public struct UserInteractingComponent
+    public struct BlockInputComponent
     {
     }
 }

@@ -21,8 +21,8 @@ namespace Scripts.Features.Grid
 
         private Tweener _startTweener;
         
-        public Transform TilesParent => _tilesParent.transform;
-        public Transform PiecesParent => _piecesParent;
+        public RectTransform TilesParent => _tilesParent;
+        public RectTransform PiecesParent => _piecesParent;
         
         public void SetupGridView()
         {

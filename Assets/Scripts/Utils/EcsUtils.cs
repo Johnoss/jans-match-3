@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
+using Initialization.ECS;
 using Leopotam.EcsLite;
 using Scripts.Features.Grid.Moving;
 using Scripts.Features.Time;
@@ -46,6 +48,26 @@ namespace Scripts.Utils
             {
                 pool.Del(entity);
             }
+        }
+
+        public static bool IsInAnyPool(this int entity, params IEcsPool[] pools)
+        {
+            if (entity == ECSTypes.NULL)
+            {
+                return false;
+            }
+            
+            return pools.Length != 0 && pools.Any(pool => pool.Has(entity));
+        }
+        
+        public static bool HasAnyOf(this IEcsPool pool, params int[] entities)
+        {
+            return entities.Length != 0 && entities.Any(pool.Has);
+        }
+        
+        public static bool HasAllOf(this IEcsPool pool, params int[] entities)
+        {
+            return entities.Length == 0 || entities.All(pool.Has);
         }
     }
 }
