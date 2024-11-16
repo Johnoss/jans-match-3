@@ -19,7 +19,7 @@ MonoBehaviour:
     _loopCount: 1
     _loopType: 1
     _targetVector: {x: 0, y: 0, z: 0}
-    _randomDelayRange: {x: 0, y: 0.2}
+    _randomDelayRange: {x: 0, y: 0.1}
     _vibrateCount: 0
   _swapTweenSetting:
     _tweenDurationSeconds: 0.35

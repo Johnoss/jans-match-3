@@ -3,13 +3,12 @@ using System.Linq;
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
 using Scripts.Features.Piece;
-using Scripts.Features.Spawning;
 
 namespace Scripts.Features.Grid.Moving
 {
     public class DetermineFallSystem : IEcsRunSystem
     {
-        private EcsFilterInject<Inc<TileComponent>, Exc<PieceTileLinkComponent, SpawnTargetComponent>> _emptyTilesFilter;
+        private EcsFilterInject<Inc<TileComponent>, Exc<PieceTileLinkComponent>> _emptyTilesFilter;
 
         private EcsCustomInject<GridService> _gridService;
         private EcsPoolInject<PieceTileLinkComponent> _pieceTileLinkPool;

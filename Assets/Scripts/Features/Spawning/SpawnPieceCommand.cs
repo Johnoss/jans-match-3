@@ -1,7 +1,8 @@
 namespace Scripts.Features.Spawning
 {
-    public struct SpawnTargetComponent
+    public struct SpawnPieceCommand
     {
         public bool ForbidMatches;
+        public int Column;
     }
 }

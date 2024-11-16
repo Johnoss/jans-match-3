@@ -68,6 +68,20 @@ namespace Scripts.Features.Grid
         {
             return GetPieceEntity(coordinates.x, coordinates.y);
         }
+        
+        public Vector2Int GetPieceCoordinates(int pieceEntity)
+        {
+            var tileEntity = _world.GetPool<PieceTileLinkComponent>().Get(pieceEntity).LinkedEntity;
+
+            if (_world.GetPool<TileComponent>().Has(tileEntity))
+            {
+                return _world.GetPool<TileComponent>().Get(tileEntity).Coordinates;
+            }
+            
+            Debug.LogError($"Piece {pieceEntity} is not linked to a tile");
+            return Vector2Int.zero;
+
+        }
 
         public HashSet<int> GetEmptyTilesBelow(Vector2Int tileComponentCoordinates)
         {
@@ -82,6 +96,21 @@ namespace Scripts.Features.Grid
             }
 
             return emptyTiles;
+        }
+
+        public int GetEmptyTilesCount(int column)
+        {
+            var emptyTilesCount = 0;
+            for (var row = 0; row < _gridConfig.GridResolution.y; row++)
+            {
+                var tileEntity = _tileEntities[column, row];
+                if (!_world.GetPool<PieceTileLinkComponent>().Has(tileEntity))
+                {
+                    emptyTilesCount++;
+                }
+            }
+
+            return emptyTilesCount;
         }
 
         public HashSet<int> GetTilesAbove(Vector2Int tileComponentCoordinates)
@@ -209,7 +238,6 @@ namespace Scripts.Features.Grid
         {
             var tileEntity = _world.NewEntity();
 
-            //Check bounds and add valid neighbours
             var validNeighbours = _gridConfig.NeighboringOffsets
                 .Select(neighboringOffset => coordinates + neighboringOffset)
                 .Where(neighbor => neighbor.IsWithinBounds(_gridConfig.GridResolution)).ToArray();
@@ -220,9 +248,10 @@ namespace Scripts.Features.Grid
                 NeighboringTileCoordinates = validNeighbours
             };
             
-            _world.GetPool<SpawnTargetComponent>().Add(tileEntity) = new SpawnTargetComponent
+            _world.GetPool<SpawnPieceCommand>().Add(_world.NewEntity()) = new SpawnPieceCommand()
             {
                 ForbidMatches = true,
+                Column = coordinates.x,
             };
 
             return tileEntity;

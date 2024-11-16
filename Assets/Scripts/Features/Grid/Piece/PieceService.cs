@@ -18,17 +18,20 @@ namespace Scripts.Features.Piece
     {
         [Inject] private PieceConfig _pieceConfig;
         [Inject] private RulesConfig _rulesConfig;
+        [Inject] private GridConfig _gridConfig;
         
         [Inject] private GridService _gridService;
         [Inject] private MatchingService _matchingService;
-        [Inject] private EcsWorld _world;
+        [Inject] private MoveService _moveService;
         
         [Inject] private EntityViewPool<PieceEntityView> _pieceEntityViewPool;
         
+        [Inject] private EcsWorld _world;
         [Inject] private GridView _gridView;
         
-        public int CreateRandomPieceEntity(int tileEntity, bool forbidMatches = false)
+        public int CreateRandomPieceEntity(Vector2Int spawnCoordinates, int height, bool forbidMatches = false)
         {
+            var tileEntity = _gridService.GetTileEntity(spawnCoordinates);
             if (_world.GetPool<PieceTileLinkComponent>().Has(tileEntity))
             {
                 var coordinates = _world.GetPool<TileComponent>().Get(tileEntity).Coordinates;
@@ -48,7 +51,7 @@ namespace Scripts.Features.Piece
             _world.GetPool<PieceComponent>().Add(pieceEntity) = new PieceComponent();
             LinkTileAndPiece(tileEntity, pieceEntity);
             
-            var pieceView = CreatePieceView(pieceEntity, tileEntity);
+            var pieceView = CreatePieceView(pieceEntity, height, tileEntity);
             
             _world.GetPool<PieceViewLinkComponent>().Add(pieceEntity) = new PieceViewLinkComponent
             {
@@ -65,16 +68,16 @@ namespace Scripts.Features.Piece
                 View = pieceView,
             };
             
-            //TODO anchorPosition offset and setup move (to simulate spawning above the board - no pun intended)
+            _moveService.SetupMovePieceCommand(pieceEntity, tileEntity, MoveType.Fall);
             
             return pieceEntity;
         }
 
-        private PieceEntityView CreatePieceView(int pieceEntity, int tileEntity)
+        private PieceEntityView CreatePieceView(int pieceEntity, int spawnHeightOffset, int tileEntity)
         {
             var view = _pieceEntityViewPool.GetPooledOrNewView(pieceEntity, _gridView.PiecesParent);
-            //TODO set offset for spawned pieces
-            view.RectTransform.anchoredPosition = _gridService.GetTileAnchorPosition(tileEntity);
+            var offset = new Vector2(0, _gridConfig.TileSize.y * spawnHeightOffset);
+            view.RectTransform.anchoredPosition = _gridService.GetTileAnchorPosition(tileEntity) + offset;
 
             return view;
         }

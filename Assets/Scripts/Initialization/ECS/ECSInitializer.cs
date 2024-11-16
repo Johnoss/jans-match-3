@@ -55,7 +55,6 @@ namespace Initialization.ECS
 
                 .DelHere<MoveCompleteComponent>()
                 .DelHere<FallPieceCommand>()
-                .DelHere<SpawnTargetComponent>()
                 .DelHere<DestroyEntityCommand>()
                 .DelHere<FallOccupantComponent>()
                 .DelHere<IsMatchComponent>();

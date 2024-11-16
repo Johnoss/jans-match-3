@@ -12,7 +12,7 @@ namespace Scripts.Features.Input
         private EcsFilterInject<Inc<GridInputComponent>, Exc<BlockContinuousInputComponent>> _gridInputFilter;
         private EcsFilterInject<Inc<BlockContinuousInputComponent>> _blockInputFilter;
         private EcsFilterInject<Inc<SelectedPieceComponent>> _selectedPieceFilter;
-        
+        private EcsFilterInject<Inc<SwapPieceComponent>> _swapPiecePool;
         
         private EcsPoolInject<PieceTileLinkComponent> _pieceTileLinkPool;
         private EcsPoolInject<SelectedPieceComponent> _selectedPiecePool;
@@ -23,8 +23,12 @@ namespace Scripts.Features.Input
 
         public void Run(EcsSystems systems)
         {
-            DetermineGridInput();
+            if (_swapPiecePool.Value.GetEntitiesCount() > 0)
+            {
+                return;
+            }
             
+            DetermineGridInput();
             TryUnblockInput();
         }
 

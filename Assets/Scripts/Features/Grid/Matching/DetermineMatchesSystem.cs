@@ -5,12 +5,13 @@ using Leopotam.EcsLite.Di;
 using Scripts.Features.Grid.Moving;
 using Scripts.Features.Input;
 using Scripts.Features.Piece;
+using Scripts.Features.Time;
 
 namespace Scripts.Features.Grid.Matching
 {
     public class DetermineMatchesSystem : IEcsRunSystem
     {
-        private EcsFilterInject<Inc<MoveCompleteComponent, PieceComponent, PieceTileLinkComponent>> _moveCompleteFilter;
+        private EcsFilterInject<Inc<MoveCompleteComponent, PieceComponent, PieceTileLinkComponent>, Exc<IsTweeningComponent>> _moveCompleteFilter;
         
         private EcsCustomInject<MatchingService> _matchingService;
         private EcsCustomInject<GridService> _gridService;

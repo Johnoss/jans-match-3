@@ -13,9 +13,11 @@ namespace Scripts.Features.Grid.Matching
 
         private EcsPoolInject<DestroyEntityCommand> _destroyEntityCommandPool;
         private EcsPoolInject<PieceTileLinkComponent> _pieceTileLinkPool;
+        private EcsPoolInject<SpawnPieceCommand> _spawnPieceCommandPool; 
 
         private EcsCustomInject<GridService> _gridService;
         
+        private EcsCustomInject<EcsWorld> _world;
         private EcsCustomInject<TweenConfig> _tweenConfig;
         
         public void Run(EcsSystems systems)
@@ -23,9 +25,21 @@ namespace Scripts.Features.Grid.Matching
             foreach (var pieceEntity in _isMatchFilter.Value)
             {
                 _destroyEntityCommandPool.Value.Add(pieceEntity) = new DestroyEntityCommand();
-                
+
+                SetupSpawnNewPiece(pieceEntity);
+
                 //TODO score and celebration
             }
+        }
+
+        private void SetupSpawnNewPiece(int pieceEntity)
+        {
+            var spawnEntity = _world.Value.NewEntity();
+            _spawnPieceCommandPool.Value.Add(spawnEntity) = new SpawnPieceCommand
+            {
+                ForbidMatches = false,
+                Column = _gridService.Value.GetPieceCoordinates(pieceEntity).x
+            };
         }
     }
 }
