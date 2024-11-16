@@ -7,10 +7,9 @@ using Scripts.Features.Tweening;
 
 namespace Scripts.Features.Grid.Matching
 {
-    public class CollectMatchesSystem : IEcsRunSystem
+    public class CompleteCollectMatchesSystem : IEcsRunSystem
     {
-        private EcsFilterInject<Inc<PieceComponent, IsMatchComponent, PieceTileLinkComponent>, Exc<IsTweeningComponent>> _isMatchFilter;
-
+        private EcsFilterInject<Inc<PieceComponent, CollectPieceComponent, PieceTileLinkComponent>, Exc<IsTweeningComponent>> _isMatchFilter;
         private EcsPoolInject<DestroyEntityCommand> _destroyEntityCommandPool;
         private EcsPoolInject<PieceTileLinkComponent> _pieceTileLinkPool;
         private EcsPoolInject<SpawnPieceCommand> _spawnPieceCommandPool; 
@@ -27,8 +26,6 @@ namespace Scripts.Features.Grid.Matching
                 _destroyEntityCommandPool.Value.Add(pieceEntity) = new DestroyEntityCommand();
 
                 SetupSpawnNewPiece(pieceEntity);
-
-                //TODO score and celebration
             }
         }
 

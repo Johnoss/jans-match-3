@@ -45,7 +45,7 @@ namespace Initialization.ECS
                 .Add(new DetermineFallSystem(), new SetupFallSystem(), new ExecuteFallSystem())
                 .Add(new SetupMoveSystem(), new StartMoveSystem(), new CompleteMoveSystem())
                 .Add(new SpawnPieceSystem())
-                .Add(new DetermineMatchesSystem(), new CollectMatchesSystem())
+                .Add(new DetermineMatchesSystem(), new SetupCollectMatchesSystem(), new CompleteCollectMatchesSystem())
                 .Add(new SwapPiecesSystem(), new ValidateSwapSystem())
 
                 .Add(new DestroyEntitySystem())

@@ -4,11 +4,18 @@ using UnityEngine;
 
 namespace Scripts.Features.Tweening
 {
-    public class PulseScaleTween : TweenView
+    public class PunchScaleTween : TweenView
     {
         [SerializeField] private float _elasticity = 1f;
+        
+        private Vector2 _defaultScale;
 
-        public void PlayTween(TweenSetting tweenSetting, out float totalSeconds)
+        private void Awake()
+        {
+            _defaultScale = TargetTransform.localScale;
+        }
+        
+        public override void PlayTween(TweenSetting tweenSetting, out float totalSeconds)
         {
             ResetTween();
 
@@ -17,6 +24,12 @@ namespace Scripts.Features.Tweening
             CachedTween = TargetTransform.DOPunchScale(tweenSetting.TargetVector, tweenSetting.TweenDurationSeconds,
                 tweenSetting.VibrateCount, _elasticity)
                 .DecorateTween(tweenSetting);
+        }
+        
+        public override void ResetTween()
+        {
+            CachedTween?.Kill();
+            TargetTransform.localScale = _defaultScale;
         }
     }
 }

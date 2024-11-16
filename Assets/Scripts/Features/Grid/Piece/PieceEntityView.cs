@@ -21,7 +21,8 @@ namespace Scripts.Features.Piece
         [Header("Tweens")]
         [SerializeField] private AnchorPositionTweenView _moveTweenView;
         [SerializeField] private ShakeRotationTweenView _invalidMoveTweenView;
-        [SerializeField] private PulseScaleTween _hintTweenView;
+        [SerializeField] private PunchScaleTween _hintTweenView;
+        [SerializeField] private TweenView[] _collectTweenViews;
         
         private EntityViewPool<PieceEntityView> _entityViewPool;
         private PieceConfig _pieceConfig;
@@ -66,6 +67,10 @@ namespace Scripts.Features.Piece
             _moveTweenView.ResetTween();
             _invalidMoveTweenView.ResetTween();
             _hintTweenView.ResetTween();
+            foreach (var tweenView in _collectTweenViews)
+            {
+                tweenView.ResetTween();
+            }
         }
 
         public void StartMoveTween(TweenSetting tweenSetting, Vector2 targetAnchorPosition, out float seconds)
@@ -78,9 +83,20 @@ namespace Scripts.Features.Piece
             _invalidMoveTweenView.PlayTween(tweenSetting, out totalSeconds);
         }
         
-        public void StartHintTween(TweenSetting tweenSetting, out float seconds)
+        public void ToggleHintTween(TweenSetting tweenSetting, bool enable)
         {
-            _hintTweenView.PlayTween(tweenSetting, out seconds);
+            _hintTweenView.PlayTween(tweenSetting, out _);
+        }
+
+        public void StartCollectTween(TweenSetting tweenSetting, out float totalSeconds)
+        {
+            totalSeconds = 0f;
+            foreach (var tweenView in _collectTweenViews)
+            {
+                tweenView.ResetTween();
+                tweenView.PlayTween(tweenSetting, out var seconds);
+                totalSeconds = Mathf.Max(totalSeconds, seconds);
+            }
         }
 
         private void SetupVisuals()

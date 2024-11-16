@@ -23,5 +23,10 @@ namespace Scripts.Features.Tweening
             var distance = Vector2.Distance(TargetTransform.anchoredPosition, targetAnchorPosition);
             totalSeconds = distance / totalSeconds;
         }
+
+        public override void ResetTween()
+        {
+            CachedTween?.Kill();
+        }
     }
 }

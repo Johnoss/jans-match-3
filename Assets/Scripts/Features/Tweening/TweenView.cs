@@ -10,10 +10,12 @@ namespace Scripts.Features.Tweening
         [SerializeField] protected RectTransform TargetTransform;
         
         protected Tweener CachedTween;
-        
-        public void ResetTween()
+
+        public abstract void ResetTween();
+
+        public virtual void PlayTween(TweenSetting tweenSetting, out float totalSeconds)
         {
-            CachedTween?.Kill();
+            totalSeconds = tweenSetting.GetMaxTweenSeconds();
         }
     }
 }

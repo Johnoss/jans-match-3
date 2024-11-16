@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: TweenConfig
   m_EditorClassIdentifier: 
   _fallTweenSetting:
-    _tweenDurationSeconds: 600
-    _ease: 5
+    _tweenDurationSeconds: 800
+    _ease: 2
     _isSpeedBased: 1
     _loopCount: 1
     _loopType: 1
     _targetVector: {x: 0, y: 0, z: 0}
-    _randomDelayRange: {x: 0, y: 0.05}
+    _randomDelayRange: {x: 0, y: 0.1}
     _vibrateCount: 0
   _swapTweenSetting:
     _tweenDurationSeconds: 0.35
@@ -32,7 +32,7 @@ MonoBehaviour:
     _vibrateCount: 0
   _revertTweenSetting:
     _tweenDurationSeconds: 0.2
-    _ease: 12
+    _ease: 14
     _isSpeedBased: 0
     _loopCount: 1
     _loopType: 1
@@ -40,23 +40,23 @@ MonoBehaviour:
     _randomDelayRange: {x: 0, y: 0}
     _vibrateCount: 0
   _collectTweenSetting:
-    _tweenDurationSeconds: 1
-    _ease: 2
+    _tweenDurationSeconds: 0.2
+    _ease: 13
     _isSpeedBased: 0
     _loopCount: 1
     _loopType: 1
-    _targetVector: {x: 0, y: 0, z: 0}
-    _randomDelayRange: {x: 0, y: 0}
+    _targetVector: {x: 0.5, y: 0.5, z: 0.5}
+    _randomDelayRange: {x: 0.1, y: 0.25}
     _vibrateCount: 0
   _collectPunchScale: {x: 0, y: 0}
   _hintTweenSetting:
     _tweenDurationSeconds: 1
     _ease: 2
     _isSpeedBased: 0
-    _loopCount: 1
+    _loopCount: -1
     _loopType: 1
     _targetVector: {x: 0, y: 0, z: 0}
-    _randomDelayRange: {x: 1, y: 2}
+    _randomDelayRange: {x: 0, y: 0}
     _vibrateCount: 0
   _invalidSwapTweenSetting:
     _tweenDurationSeconds: 1
@@ -68,11 +68,11 @@ MonoBehaviour:
     _randomDelayRange: {x: 0, y: 0}
     _vibrateCount: 20
   _gridLaunchTweenSetting:
-    _tweenDurationSeconds: 0.5
-    _ease: 27
+    _tweenDurationSeconds: 1
+    _ease: 18
     _isSpeedBased: 0
     _loopCount: 1
     _loopType: 1
     _targetVector: {x: 0, y: 0, z: 0}
-    _randomDelayRange: {x: 0, y: 0}
+    _randomDelayRange: {x: 0.5, y: 0.5}
     _vibrateCount: 0
