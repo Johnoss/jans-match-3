@@ -14,6 +14,14 @@ namespace Scripts.Features.Tweening
 
             CachedTween = TargetTransform.DOAnchorPos(targetAnchorPosition, tweenSetting.TweenDurationSeconds)
                 .DecorateTween(tweenSetting);
+
+            if (!tweenSetting.IsSpeedBased)
+            {
+                return;
+            }
+            
+            var distance = Vector2.Distance(TargetTransform.anchoredPosition, targetAnchorPosition);
+            totalSeconds = distance / totalSeconds;
         }
     }
 }

@@ -21,6 +21,7 @@ namespace Scripts.Utils
             return tweener
                 .SetEase(tweenSetting.Ease)
                 .SetLoops(tweenSetting.LoopCount, tweenSetting.LoopType)
+                .SetSpeedBased(tweenSetting.IsSpeedBased)
                 .SetDelay(tweenSetting.DelaySecondsFromRange);
         }
     }
