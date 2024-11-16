@@ -1,6 +1,8 @@
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
 using Scripts.Features.Grid;
+using Scripts.Features.Grid.Matching;
+using Scripts.Features.Grid.Moving;
 using Scripts.Features.Piece;
 using Scripts.Utils;
 using UnityEngine;
@@ -12,7 +14,9 @@ namespace Scripts.Features.Input
         private EcsFilterInject<Inc<GridInputComponent>, Exc<BlockContinuousInputComponent>> _gridInputFilter;
         private EcsFilterInject<Inc<BlockContinuousInputComponent>> _blockInputFilter;
         private EcsFilterInject<Inc<SelectedPieceComponent>> _selectedPieceFilter;
-        private EcsFilterInject<Inc<SwapPieceComponent>> _swapPiecePool;
+        private EcsFilterInject<Inc<SwapPieceComponent>> _swapPieceFilter;
+        private EcsFilterInject<Inc<IsMovingComponent>> _isMovingFilter;
+        private EcsFilterInject<Inc<CollectPieceComponent>> _collectPieceFilter;
         
         private EcsPoolInject<PieceTileLinkComponent> _pieceTileLinkPool;
         private EcsPoolInject<SelectedPieceComponent> _selectedPiecePool;
@@ -23,7 +27,7 @@ namespace Scripts.Features.Input
 
         public void Run(EcsSystems systems)
         {
-            if (_swapPiecePool.Value.GetEntitiesCount() > 0)
+            if (_swapPieceFilter.Value.GetEntitiesCount() + _isMovingFilter.Value.GetEntitiesCount() + _collectPieceFilter.Value.GetEntitiesCount() > 0)
             {
                 return;
             }
