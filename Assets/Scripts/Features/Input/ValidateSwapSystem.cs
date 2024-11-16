@@ -13,12 +13,16 @@ namespace Scripts.Features.Input
     public class ValidateSwapSystem : IEcsRunSystem
     {
         private EcsFilterInject<Inc<SwapPieceComponent, PieceComponent, MoveCompleteComponent>> _completedSwapFilter;
+        private EcsFilterInject<Inc<SwapPieceComponent, PieceComponent, PendingMatchValidatorComponent>> _pendingMatchValidatorFilter;
+
+        private EcsFilterInject<Inc<IsMovingComponent>> _isMovingFilter;
         
         private EcsPoolInject<SwapPieceComponent> _swapPiecePool;
         private EcsPoolInject<InvalidSwapComponent> _invalidSwapPool;
         private EcsPoolInject<IsMatchComponent> _isMatchPool;
         private EcsPoolInject<IsTweeningComponent> _isTweeningComponent;
         private EcsPoolInject<PieceViewLinkComponent> _pieceViewLinkPool;
+        private EcsPoolInject<PendingMatchValidatorComponent> _pendingMatchValidatorPool;
         
         private EcsCustomInject<TweenConfig> _tweenConfig;
         
@@ -29,20 +33,40 @@ namespace Scripts.Features.Input
 
         private void ValidateCompletedSwaps()
         {
-            foreach (var entity in _completedSwapFilter.Value)
+            var isAnyPieceMoving = _isMovingFilter.Value.GetEntitiesCount() > 0;
+            
+            foreach (var sourcePieceEntity in _completedSwapFilter.Value)
             {
-                var swapComponent = _swapPiecePool.Value.Get(entity);
+                var swapComponent = _swapPiecePool.Value.Get(sourcePieceEntity);
                 var targetPieceEntity = swapComponent.TargetPieceEntity;
+                _pendingMatchValidatorPool.Value.AddOrSkip(targetPieceEntity);
+            }
+            
+            if (isAnyPieceMoving)
+            {
+                return;
+            }
+            
+            foreach (var sourcePieceEntity in _pendingMatchValidatorFilter.Value)
+            {
+                var swapComponent = _swapPiecePool.Value.Get(sourcePieceEntity);
+                var targetPieceEntity = swapComponent.TargetPieceEntity;
+                ValidateSwap(sourcePieceEntity, targetPieceEntity);
                 
-                if (_invalidSwapPool.Value.Has(entity) || _isMatchPool.Value.Has(targetPieceEntity) || _isMatchPool.Value.Has(entity))
-                {
-                    _swapPiecePool.Value.Del(entity);
-                    _invalidSwapPool.Value.DelOrSkip(entity);
-                }
-                else
-                {
-                    SetupInvalidMove(entity);
-                }
+                _pendingMatchValidatorPool.Value.Del(targetPieceEntity);
+            }
+        }
+
+        private void ValidateSwap(int sourcePieceEntity, int targetPieceEntity)
+        {
+            if (_invalidSwapPool.Value.Has(sourcePieceEntity) || _isMatchPool.Value.Has(targetPieceEntity) || _isMatchPool.Value.Has(sourcePieceEntity))
+            {
+                _swapPiecePool.Value.Del(sourcePieceEntity);
+                _invalidSwapPool.Value.DelOrSkip(sourcePieceEntity);
+            }
+            else
+            {
+                SetupInvalidMove(sourcePieceEntity);
             }
         }
 

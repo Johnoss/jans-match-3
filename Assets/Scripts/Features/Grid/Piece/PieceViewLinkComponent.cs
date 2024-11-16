@@ -1,6 +1,4 @@
-using Scripts.Features.Piece;
-
-namespace Scripts.Features.Input
+namespace Scripts.Features.Piece
 {
     public struct PieceViewLinkComponent
     {
