@@ -35,6 +35,7 @@ namespace Initialization
             SetupPools();
             _gridService.SetupGrid();
             _inputService.SetupInput();
+            _matchingService.CreateMatchValidatorEntity();
             _matchingService.CreatePossibleMovesEntity();
         }
 

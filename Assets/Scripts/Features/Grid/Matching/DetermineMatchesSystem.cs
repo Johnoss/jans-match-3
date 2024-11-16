@@ -3,27 +3,49 @@ using System.Linq;
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
 using Scripts.Features.Grid.Moving;
-using Scripts.Features.Input;
 using Scripts.Features.Piece;
-using Scripts.Features.Time;
 
 namespace Scripts.Features.Grid.Matching
 {
     public class DetermineMatchesSystem : IEcsRunSystem
     {
-        private EcsFilterInject<Inc<MoveCompleteComponent, PieceComponent, PieceTileLinkComponent>, Exc<IsTweeningComponent>> _moveCompleteFilter;
+        private EcsFilterInject<Inc<MatchValidatorComponent>> _matchValidatorFilter;
+        private EcsFilterInject<Inc<MoveCompleteComponent>> _moveCompleteFilter;
+        
+        private EcsFilterInject<Inc<IsMovingComponent>> _ongoingMoveFilter;
+        
+        private EcsPoolInject<PieceTileLinkComponent> _pieceTileLinkPool;
+        private EcsPoolInject<IsMatchComponent> _isMatchPool;
         
         private EcsCustomInject<MatchingService> _matchingService;
         private EcsCustomInject<GridService> _gridService;
 
-        private EcsPoolInject<SwapPieceComponent> _swapPiecePool;
-        private EcsPoolInject<IsMatchComponent> _isMatchPool;
-        
         public void Run(EcsSystems systems)
         {
-            foreach (var pieceEntity in _moveCompleteFilter.Value)
+            foreach (var matchValidatorEntity in _matchValidatorFilter.Value)
             {
-                var pieceTileLinkComponent = _moveCompleteFilter.Pools.Inc3.Get(pieceEntity);
+                ref var matchValidatorComponent = ref _matchValidatorFilter.Pools.Inc1.Get(matchValidatorEntity);
+                foreach (var pieceEntity in _moveCompleteFilter.Value)
+                {
+                    matchValidatorComponent.PendingMatchPieceEntities.Add(pieceEntity);
+                }
+                
+                if (_ongoingMoveFilter.Value.GetEntitiesCount() > 0)
+                {
+                    return;
+                }
+
+                DetermineMatches(matchValidatorComponent);
+                
+                matchValidatorComponent.PendingMatchPieceEntities.Clear();
+            }
+        }
+
+        private void DetermineMatches(MatchValidatorComponent matchValidatorComponent)
+        {
+            foreach (var pieceEntity in matchValidatorComponent.PendingMatchPieceEntities)
+            {
+                var pieceTileLinkComponent = _pieceTileLinkPool.Value.Get(pieceEntity);
                 
                 var tileEntity = pieceTileLinkComponent.LinkedEntity;
                 
@@ -34,11 +56,11 @@ namespace Scripts.Features.Grid.Matching
                 {
                     continue;
                 }
-
+                
                 MarkMatchedPieces(_gridService.Value.GetPieceEntitiesAtCoordinates(legalMatches));
             }
         }
-
+        
         private void MarkMatchedPieces(HashSet<int> getPieceEntitiesAtCoordinates)
         {
             foreach (var pieceEntity in getPieceEntitiesAtCoordinates.Where(pieceEntity => !_isMatchPool.Value.Has(pieceEntity)))

@@ -18,7 +18,18 @@ namespace Scripts.Features.Grid.Matching
         [Inject] private EcsWorld _world;
         
         private int _possibleMovesEntity;
+        public int MatchValidatorEntity { get; private set; }
         
+        public void CreateMatchValidatorEntity()
+        {
+            MatchValidatorEntity = _world.NewEntity();
+            _world.GetPool<MatchValidatorComponent>().Add(MatchValidatorEntity) = new MatchValidatorComponent
+            {
+                PendingMatchPieceEntities = new HashSet<int>()
+            };
+        }
+
+
         public void CreatePossibleMovesEntity()
         {
             _possibleMovesEntity = _world.NewEntity();

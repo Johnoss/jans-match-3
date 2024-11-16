@@ -13,13 +13,13 @@ MonoBehaviour:
   m_Name: TweenConfig
   m_EditorClassIdentifier: 
   _fallTweenSetting:
-    _tweenDurationSeconds: 0.2
-    _ease: 30
-    _isSpeedBased: 0
+    _tweenDurationSeconds: 600
+    _ease: 5
+    _isSpeedBased: 1
     _loopCount: 1
     _loopType: 1
     _targetVector: {x: 0, y: 0, z: 0}
-    _randomDelayRange: {x: 0, y: 0.1}
+    _randomDelayRange: {x: 0, y: 0.05}
     _vibrateCount: 0
   _swapTweenSetting:
     _tweenDurationSeconds: 0.35
