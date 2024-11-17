@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: TweenConfig
   m_EditorClassIdentifier: 
   _fallTweenSetting:
-    _tweenDurationSeconds: 800
-    _ease: 2
+    _tweenDurationSeconds: 1000
+    _ease: 5
     _isSpeedBased: 1
     _loopCount: 1
     _loopType: 1

@@ -19,5 +19,10 @@ namespace Scripts.Features.Grid.Matching
         public int MaxIterationsPerFrame => _maxIterationsPerFrame;
         public float PossibleMoveCheckDelaySeconds => _possibleMoveCheckDelaySeconds;
         public float ShuffleDelaySeconds => _shuffleDelaySeconds;
+        
+        [Header("Game Session")]
+        [SerializeField] private float _gameDurationSeconds = 3 * 60f;
+        
+        public float GameDurationSeconds => _gameDurationSeconds;
     }
 }

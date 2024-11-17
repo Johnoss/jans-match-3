@@ -1,11 +1,12 @@
 ﻿using System;
 using UniRx;
+using Zenject;
 
 namespace MVC
 {
     public abstract class MVCDisposable : IDisposable
     {
-        protected readonly CompositeDisposable Disposer = new();
+        [Inject] protected readonly CompositeDisposable Disposer;
 
         public virtual void Dispose()
         {

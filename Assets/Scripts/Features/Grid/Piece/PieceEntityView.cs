@@ -3,6 +3,7 @@ using Leopotam.EcsLite;
 using MVC;
 using Scripts.Features.Grid;
 using Scripts.Features.Tweening;
+using UniRx;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -37,9 +38,10 @@ namespace Scripts.Features.Piece
         public RectTransform RectTransform => _rectTransform;
 
         [Inject]
-        public void Construct(int entity, PieceConfig pieceConfig, GridConfig gridConfig, EntityViewPool<PieceEntityView> entityViewPool, EcsWorld world)
+        public void Construct(int entity, PieceConfig pieceConfig, GridConfig gridConfig, EntityViewPool<PieceEntityView> entityViewPool, EcsWorld world, CompositeDisposable disposer)
         {
             SetEntity(entity);
+            SetDisposer(disposer);
             _pieceConfig = pieceConfig;
             _gridConfig = gridConfig;
             _entityViewPool = entityViewPool;

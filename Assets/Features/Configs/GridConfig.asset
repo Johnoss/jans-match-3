@@ -18,5 +18,5 @@ MonoBehaviour:
   - {x: 1, y: 0}
   - {x: 0, y: -1}
   - {x: -1, y: 0}
-  _tileSize: {x: 125, y: 125}
+  _tileSize: {x: 200, y: 200}
   _tilePrefab: {fileID: 6183156859451603534, guid: e892dff0c04088e4683dabff875716ba, type: 3}

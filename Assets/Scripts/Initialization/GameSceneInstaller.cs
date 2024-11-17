@@ -1,8 +1,11 @@
+using Scripts.Features.GameSession;
 using Scripts.Features.Grid;
 using Scripts.Features.Grid.Matching;
 using Scripts.Features.Grid.Moving;
 using Scripts.Features.Input;
 using Scripts.Features.Piece;
+using Scripts.Features.UI;
+using UniRx;
 using UnityEngine;
 using Zenject;
 
@@ -12,6 +15,8 @@ namespace Initialization
     {
         [SerializeField] private Transform _pooledObjectsParent;
         [SerializeField] private GridView _gridView;
+        [SerializeField] private GameUIView _gameUIView;
+        [SerializeField] private MainMenuView _mainMenuView;
         
         public override void InstallBindings()
         {
@@ -27,6 +32,14 @@ namespace Initialization
             Container.Bind<MatchingService>().AsSingle();
             Container.Bind<MoveService>().AsSingle();
             Container.Bind<InputService>().AsSingle();
+            
+            Container.Bind<CompositeDisposable>().AsSingle();
+            
+            Container.Bind<GameSessionModel>().AsSingle();
+            Container.Bind<GameSessionController>().AsSingle().NonLazy();
+
+            Container.BindInstance(_gameUIView).AsSingle();
+            Container.BindInstance(_mainMenuView).AsSingle();
         }
     }
 }

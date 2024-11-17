@@ -6,6 +6,7 @@ using Scripts.Features.Grid.Matching;
 using Scripts.Features.Piece;
 using Scripts.Features.Spawning;
 using Scripts.Utils;
+using UniRx;
 using UnityEngine;
 using Zenject;
 
@@ -23,6 +24,8 @@ namespace Scripts.Features.Grid
         
         [Inject] private TileView.ViewFactory _tileViewFactory;
 
+        [Inject] private CompositeDisposable _disposer;
+
         private int[,] _tileEntities;
         
         public void SetupGrid()
@@ -32,8 +35,6 @@ namespace Scripts.Features.Grid
             _world.GetPool<GridComponent>().Add(gridEntity) = new GridComponent();
             
             _tileEntities = new int[_gridConfig.GridResolution.x, _gridConfig.GridResolution.y];
-            
-            CreateTiles();
         }
 
         public bool AreNeighbours(int interactedTileA, int interactedTileB)
@@ -177,7 +178,7 @@ namespace Scripts.Features.Grid
             return _gridConfig.GetTileAnchorPosition(tileComponent.Coordinates);
         }
 
-        private void CreateTiles()
+        public void CreateTiles()
         {
             for (var row = 0; row < _gridConfig.GridResolution.y; row++)
             {

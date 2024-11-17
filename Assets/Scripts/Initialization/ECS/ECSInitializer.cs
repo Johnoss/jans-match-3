@@ -1,6 +1,7 @@
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
 using Leopotam.EcsLite.ExtendedSystems;
+using Scripts.Features.GameSession;
 using Scripts.Features.Grid;
 using Scripts.Features.Grid.Matching;
 using Scripts.Features.Grid.Moving;
@@ -31,8 +32,11 @@ namespace Initialization.ECS
         
         [Inject] private GridView _gridView;
         
-        private EcsSystems _systems;
+        [Inject] private GameSessionModel _gameSessionModel;
         
+        private EcsSystems _systems;
+        private bool _systemsOn;
+
         [Inject]
         private void Init()
         {
@@ -48,10 +52,13 @@ namespace Initialization.ECS
                 .Add(new DetermineMatchesSystem(), new SetupCollectMatchesSystem(), new CompleteCollectMatchesSystem())
                 .Add(new SwapPiecesSystem(), new ValidateSwapSystem())
 
+                .Add(new GameSessionSystem())
                 .Add(new DestroyEntitySystem())
 
                 .Add(new ValidatePossibleMovesSystem())
                 .Add(new ShuffleBoardSystem())
+                
+                .Add(new GameTimerSystem())
 
                 .DelHere<MoveCompleteComponent>()
                 .DelHere<FallPieceCommand>()
@@ -84,11 +91,22 @@ namespace Initialization.ECS
                 _gridConfig,
                 
                 _gridView,
+                
+                _gameSessionModel,
             };
+        }
+        
+        public void ToggleSystems(bool enable)
+        {
+            _systemsOn = enable;
         }
         
         private void RunSystems()
         {
+            if (!_systemsOn)
+            {
+                return;
+            }
             _systems.Run();
         }
     }

@@ -26,10 +26,10 @@ namespace Scripts.Features.Grid
         public RectTransform RectTransform => _rectTransform;
         
         [Inject]
-        public void Construct(int entity, GridConfig gridConfig, EcsWorld world)
+        public void Construct(int entity, GridConfig gridConfig, EcsWorld world, CompositeDisposable disposer)
         {
             _entity = entity;
-
+            SetDisposer(disposer);
 #if UNITY_EDITOR || DEBUG
             var tilePool = world.GetPool<TileComponent>();
             var tileComponent = tilePool.Get(_entity);
