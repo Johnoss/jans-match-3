@@ -6,6 +6,7 @@ using Scripts.Features.Grid.Matching;
 using Scripts.Features.Time;
 using Scripts.Utils;
 using UniRx;
+using UnityEngine;
 using Zenject;
 
 namespace Scripts.Features.GameSession
@@ -39,6 +40,9 @@ namespace Scripts.Features.GameSession
             
             _gameSessionEntity = _world.NewEntity();
             _world.GetPool<GameSessionComponent>().Add(_gameSessionEntity);
+
+            //TODO remove
+            _gameSessionModel.IsTimerPaused.Subscribe(isPaused => Debug.Log($"Timer paused: {isPaused}")).AddTo(Disposer);
         }
 
         public void StartGame()

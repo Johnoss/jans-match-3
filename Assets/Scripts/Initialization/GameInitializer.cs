@@ -21,6 +21,7 @@ namespace Initialization
         [Inject] private InputService _inputService;
         
         [Inject] private GridConfig _gridConfig;
+        [Inject] private RulesConfig _rulesConfig;
         
         private readonly Transform _pooledObjectsParent;
         
@@ -38,6 +39,8 @@ namespace Initialization
             _inputService.SetupInput();
             _matchingService.CreateMatchValidatorEntity();
             _matchingService.CreatePossibleMovesEntity();
+
+            Application.targetFrameRate = 60; //_rulesConfig.TargetFrameRate;
         }
 
         private void SetupPools()

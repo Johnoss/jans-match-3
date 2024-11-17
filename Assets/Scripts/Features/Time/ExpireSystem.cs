@@ -7,7 +7,7 @@ namespace Scripts.Features.Time
 {
     public class ExpireSystem : IEcsRunSystem
     {
-        private EcsFilterInject<Inc<ExpireComponent>> _expireFilter;
+        private EcsFilterInject<Inc<ExpireComponent>, Exc<PauseExpireComponent>> _expireFilter;
         private EcsFilterInject<Inc<IsTweeningComponent>> _cooldownFilter;
         
         public void Run(EcsSystems systems)

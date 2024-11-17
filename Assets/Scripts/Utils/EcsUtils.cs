@@ -1,9 +1,8 @@
-using System.Collections.Generic;
 using System.Linq;
 using Initialization.ECS;
 using Leopotam.EcsLite;
-using Scripts.Features.Grid.Moving;
 using Scripts.Features.Time;
+using UnityEngine;
 
 namespace Scripts.Utils
 {
@@ -12,6 +11,16 @@ namespace Scripts.Utils
         public static ref T GetOrAddComponent<T>(this EcsPool<T> pool, int entity) where T : struct
         {
             return ref pool.Has(entity) ? ref pool.Get(entity) : ref pool.Add(entity);
+        }
+        
+        public static void DelOrSkip<T>(this EcsPool<T> pool, int entity, out bool hasDeleted) where T : struct
+        {
+            var has = pool.Has(entity);
+            hasDeleted = !has;
+            if (has)
+            {
+                pool.Del(entity);
+            }
         }
         
         public static void DelOrSkip<T>(this EcsPool<T> pool, int entity) where T : struct
@@ -30,6 +39,16 @@ namespace Scripts.Utils
             }
         }
         
+        public static void AddOrSkip<T>(this EcsPool<T> pool, int entity, out bool hasAdded) where T : struct
+        {
+            var has = pool.Has(entity);
+            hasAdded = !has;
+            if (!has)
+            {
+                pool.Add(entity);
+            }
+        }
+        
         public static EcsSystems Add(this EcsSystems systems, params IEcsSystem[] systemsToAdd) 
         {
             foreach (var system in systemsToAdd)
@@ -42,7 +61,11 @@ namespace Scripts.Utils
         public static void UpdateTime<TComponent>(this EcsPool<TComponent> pool, int entity) where TComponent : struct, ITimeComponent
         {
             ref var component = ref pool.Get(entity);
-            component.RemainingSeconds -= UnityEngine.Time.deltaTime;
+            Debug.Log("Frame: " + Time.frameCount);
+            Debug.Log($"Updating time for entity {entity}, previous value: {component.RemainingSeconds}");
+            var deltaTime = Time.deltaTime;
+            component.RemainingSeconds -= deltaTime;
+            Debug.Log($"Updated time for entity {entity}, new value: {component.RemainingSeconds}, deltaTime: {deltaTime}");
             
             if (component.RemainingSeconds <= 0)
             {

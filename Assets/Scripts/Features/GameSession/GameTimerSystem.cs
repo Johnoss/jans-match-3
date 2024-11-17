@@ -1,6 +1,11 @@
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
+using Scripts.Features.Grid.Matching;
+using Scripts.Features.Grid.Moving;
+using Scripts.Features.Input;
+using Scripts.Features.Piece;
 using Scripts.Features.Time;
+using Scripts.Utils;
 
 namespace Scripts.Features.GameSession
 {
@@ -10,13 +15,40 @@ namespace Scripts.Features.GameSession
         private EcsFilterInject<Inc<GameTimerComponent, GameInProgressComponent>, Exc<ExpireComponent>> _timeOverFilter;
         
         private EcsCustomInject<GameSessionModel> _gameSessionModel;
+        
+        private  EcsFilterInject<Inc<SwapPieceComponent>> _swapPieceFilter;
+        private  EcsFilterInject<Inc<PieceComponent, IsMovingComponent>> _isMovingFilter;
+        private  EcsFilterInject<Inc<CollectPieceComponent>> _collectPieceFilter;
+        private  EcsFilterInject<Inc<PieceComponent, IsTweeningComponent>> _tweeningPiecesFilter;
+
+        private EcsPoolInject<PauseExpireComponent> _pauseExpirePool;
             
         public void Run(EcsSystems systems)
         {
+            var isMatchOngoing = IsMatchOngoing();
+            _gameSessionModel.Value.SetTimerPaused(isMatchOngoing);
+            
             foreach (var entity in _timerFilter.Value)
             {
+                bool hasPauseUpdated;
+                if (isMatchOngoing)
+                {
+                    _pauseExpirePool.Value.AddOrSkip(entity, out hasPauseUpdated);
+                }
+                else
+                {
+                    _pauseExpirePool.Value.DelOrSkip(entity, out hasPauseUpdated);
+                }
+                
+                if (!hasPauseUpdated)
+                {
+                    continue;
+                }
+                
+                _gameSessionModel.Value.SetTimerPaused(isMatchOngoing);
                 var expireComponent = _timerFilter.Pools.Inc3.Get(entity);
                 _gameSessionModel.Value.SetRemainingSeconds(expireComponent.RemainingSeconds);
+                
             }
 
             foreach (var entity in _timeOverFilter.Value)
@@ -25,6 +57,14 @@ namespace Scripts.Features.GameSession
                 
                 _timeOverFilter.Pools.Inc2.Del(entity);
             }
+        }
+
+        private bool IsMatchOngoing()
+        {
+            return _swapPieceFilter.Value.GetEntitiesCount() 
+                + _isMovingFilter.Value.GetEntitiesCount()
+                + _collectPieceFilter.Value.GetEntitiesCount()
+                + _tweeningPiecesFilter.Value.GetEntitiesCount() > 0;
         }
     }
 }

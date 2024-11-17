@@ -17,4 +17,6 @@ MonoBehaviour:
   _maxIterationsPerFrame: 10
   _possibleMoveCheckDelaySeconds: 1
   _shuffleDelaySeconds: 0.5
-  _gameDurationSeconds: 5
+  _gameDurationSeconds: 180
+  _highScoreKey: Score
+  _targetFrameRate: 120

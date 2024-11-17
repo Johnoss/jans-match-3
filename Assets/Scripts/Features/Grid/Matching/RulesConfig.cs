@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Scripts.Features.Grid.Matching
 {
@@ -24,5 +23,15 @@ namespace Scripts.Features.Grid.Matching
         [SerializeField] private float _gameDurationSeconds = 3 * 60f;
         
         public float GameDurationSeconds => _gameDurationSeconds;
+        
+        [Header("Serialization")]
+        [SerializeField] private string _highScoreKey = "Score";
+        
+        public string HighScoreKey => _highScoreKey;
+        
+        [Header("Performance")]
+        [SerializeField] private int _targetFrameRate = 120;
+        
+        public int TargetFrameRate => _targetFrameRate;
     }
 }
