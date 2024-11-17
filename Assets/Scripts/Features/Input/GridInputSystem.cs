@@ -38,7 +38,8 @@ namespace Scripts.Features.Input
 
         private void TryUnblockInput()
         {
-            if (UnityEngine.Input.GetMouseButton(0) || UnityEngine.Input.touchCount != 0)
+            var isTap = _selectedPieceFilter.Value.GetEntitiesCount() == 1;
+            if (UnityEngine.Input.GetMouseButton(0) || UnityEngine.Input.touchCount != 0 || isTap)
             {
                 return;
             }
