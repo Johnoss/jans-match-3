@@ -29,9 +29,15 @@ namespace Scripts.Features.GameSession
 
         [Inject] private RulesConfig _rulesConfig;
 
+        public void SetScore(float score)
+        {
+            _score.Value = score;
+        }
+
         public void IncrementScore(float deltaScore)
         {
-            _score.Value += deltaScore;
+            var newScore = _score.Value + deltaScore;
+            SetScore(newScore);
         }
 
         public void IncrementCombo(int deltaCombo = 1)
@@ -53,7 +59,7 @@ namespace Scripts.Features.GameSession
         public void SetFinalScore()
         {
             var score = _score.Value;
-            _isHighScoreBeaten.Value = score > _highScore.Value;
+            _isHighScoreBeaten.SetValueAndForceNotify(score > _highScore.Value);
             if (!_isHighScoreBeaten.Value)
             {
                 return;
@@ -61,7 +67,6 @@ namespace Scripts.Features.GameSession
             
             PlayerPrefsUtils.SetFloat(_rulesConfig.HighScoreKey, score);
             _highScore.Value = score;
-
         }
 
         public void SetTimerPaused(bool isBusy)
@@ -82,11 +87,6 @@ namespace Scripts.Features.GameSession
         private void SetCurrentCombo(int combo)
         {
             _currentCombo.Value = combo;
-        }
-
-        private void SetScore(float score)
-        {
-            _score.Value = score;
         }
     }
 }

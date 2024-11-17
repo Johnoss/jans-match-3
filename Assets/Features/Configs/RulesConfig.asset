@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _minMatchLength: 3
   _allowSquareMatches: 1
+  _baseScore: 45
+  _comboAdditiveBonus: 15
   _maxIterationsPerFrame: 10
   _possibleMoveCheckDelaySeconds: 1
   _shuffleDelaySeconds: 0.5

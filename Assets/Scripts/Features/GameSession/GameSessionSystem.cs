@@ -1,8 +1,5 @@
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
-using Scripts.Features.Grid.Matching;
-using Scripts.Features.Grid.Moving;
-using Scripts.Features.Input;
 using Scripts.Features.Piece;
 using Scripts.Features.Spawning;
 using Scripts.Features.Time;
@@ -40,20 +37,9 @@ namespace Scripts.Features.GameSession
                 return;
             }
 
-            foreach (var pieceEntity in _pieceFilter.Value)
-            {
-                _destroyEntityCommandPool.Value.Add(pieceEntity);
-            }
-            
-            foreach (var gameSessionEntity in _spawnPieceFilter.Value)
-            {
-                _destroyEntityCommandPool.Value.Add(gameSessionEntity);
-            }
-
             foreach (var gameSessionEntity in _gameOverFilter.Value)
             {
                 _gameOverFilter.Pools.Inc2.Del(gameSessionEntity);
-                
             }
         }
     }

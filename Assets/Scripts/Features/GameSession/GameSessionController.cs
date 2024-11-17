@@ -45,20 +45,25 @@ namespace Scripts.Features.GameSession
         }
 
         public void StartGame()
-        {
-            _gridService.CreateTiles();
-            
-            _gameSessionModel.ToggleEcsSystems(true);
+        {            
             
             _world.GetPool<GameInProgressComponent>().Add(_gameTimerEntity);
             
             var defaultSeconds = _rulesConfig.GameDurationSeconds;
             ref var gameExpireComponent = ref _world.GetPool<ExpireComponent>().GetOrAddComponent(_gameTimerEntity);
             gameExpireComponent.RemainingSeconds = defaultSeconds;
+            
+            _gameSessionModel.SetScore(0);
+            _gameSessionModel.ToggleEcsSystems(true);
         }
 
         public void IncrementScore(int matchedPiecesCount)
         {
+            if (!_gameSessionModel.IsGameRunning.Value)
+            {
+                return;
+            }
+            
             _gameSessionModel.IncrementCombo();
             
             var combo = _gameSessionModel.CurrentCombo.Value;
@@ -74,6 +79,7 @@ namespace Scripts.Features.GameSession
         {
             _world.GetPool<GameOverCommand>().Add(_gameSessionEntity);
             _gameSessionModel.SetFinalScore();
+            _gameSessionModel.ToggleEcsSystems(false);
             //Toggle systems off?
             //TODO ditch all pieces and show score
         }
