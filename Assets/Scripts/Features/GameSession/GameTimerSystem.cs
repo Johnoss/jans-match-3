@@ -18,6 +18,7 @@ namespace Scripts.Features.GameSession
         
         private  EcsFilterInject<Inc<SwapPieceComponent>> _swapPieceFilter;
         private  EcsFilterInject<Inc<PieceComponent, IsMovingComponent>> _isMovingFilter;
+        private  EcsFilterInject<Inc<PieceComponent, StartMovePieceCommand>> _startMoveFilter;
         private  EcsFilterInject<Inc<CollectPieceComponent>> _collectPieceFilter;
         private  EcsFilterInject<Inc<PieceComponent, IsTweeningComponent>> _tweeningPiecesFilter;
 
@@ -30,22 +31,15 @@ namespace Scripts.Features.GameSession
             
             foreach (var entity in _timerFilter.Value)
             {
-                bool hasPauseUpdated;
                 if (isMatchOngoing)
                 {
-                    _pauseExpirePool.Value.AddOrSkip(entity, out hasPauseUpdated);
+                    _pauseExpirePool.Value.AddOrSkip(entity);
                 }
                 else
                 {
-                    _pauseExpirePool.Value.DelOrSkip(entity, out hasPauseUpdated);
+                    _pauseExpirePool.Value.DelOrSkip(entity);
                 }
                 
-                if (!hasPauseUpdated)
-                {
-                    continue;
-                }
-                
-                _gameSessionModel.Value.SetTimerPaused(isMatchOngoing);
                 var expireComponent = _timerFilter.Pools.Inc3.Get(entity);
                 _gameSessionModel.Value.SetRemainingSeconds(expireComponent.RemainingSeconds);
                 
@@ -63,6 +57,7 @@ namespace Scripts.Features.GameSession
         {
             return _swapPieceFilter.Value.GetEntitiesCount() 
                 + _isMovingFilter.Value.GetEntitiesCount()
+                + _startMoveFilter.Value.GetEntitiesCount()
                 + _collectPieceFilter.Value.GetEntitiesCount()
                 + _tweeningPiecesFilter.Value.GetEntitiesCount() > 0;
         }

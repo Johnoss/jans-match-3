@@ -12,6 +12,7 @@ namespace Scripts.Features.GameSession
     public class GameSessionSystem : IEcsRunSystem
     {
         private EcsFilterInject<Inc<GameSessionComponent, GameOverCommand>> _gameOverFilter;
+        private EcsFilterInject<Inc<GameTimerComponent, PauseExpireComponent>> _pausedTimerFilter;
         
         private  EcsFilterInject<Inc<PieceComponent>> _pieceFilter;
         private  EcsFilterInject<Inc<SpawnPieceCommand>> _spawnPieceFilter;
@@ -22,6 +23,7 @@ namespace Scripts.Features.GameSession
         
         public void Run(EcsSystems systems)
         {
+            _gameSessionModel.Value.SetTimerPaused(_pausedTimerFilter.Value.GetEntitiesCount() > 0);
             TryCleanupAfterGameOver();
         }
 

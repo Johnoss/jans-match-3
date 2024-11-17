@@ -40,16 +40,13 @@ namespace Scripts.Features.GameSession
             
             _gameSessionEntity = _world.NewEntity();
             _world.GetPool<GameSessionComponent>().Add(_gameSessionEntity);
-
-            //TODO remove
-            _gameSessionModel.IsTimerPaused.Subscribe(isPaused => Debug.Log($"Timer paused: {isPaused}")).AddTo(Disposer);
         }
 
         public void StartGame()
         {
             _gridService.CreateTiles();
             
-            _ecsInitializer.ToggleSystems(true);
+            _gameSessionModel.ToggleEcsSystems(true);
             
             _world.GetPool<GameInProgressComponent>().Add(_gameTimerEntity);
             

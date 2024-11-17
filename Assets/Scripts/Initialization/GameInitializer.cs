@@ -40,7 +40,7 @@ namespace Initialization
             _matchingService.CreateMatchValidatorEntity();
             _matchingService.CreatePossibleMovesEntity();
 
-            Application.targetFrameRate = 60; //_rulesConfig.TargetFrameRate;
+            Application.targetFrameRate = _rulesConfig.TargetFrameRate;
         }
 
         private void SetupPools()

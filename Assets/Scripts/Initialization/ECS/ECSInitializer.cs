@@ -33,9 +33,11 @@ namespace Initialization.ECS
         [Inject] private GridView _gridView;
         
         [Inject] private GameSessionModel _gameSessionModel;
+        [Inject] private CompositeDisposable _disposer;
         
         private EcsSystems _systems;
         private bool _systemsOn;
+        
 
         [Inject]
         private void Init()
@@ -52,13 +54,13 @@ namespace Initialization.ECS
                 .Add(new DetermineMatchesSystem(), new SetupCollectMatchesSystem(), new CompleteCollectMatchesSystem())
                 .Add(new SwapPiecesSystem(), new ValidateSwapSystem())
 
+                .Add(new GameTimerSystem())
                 .Add(new GameSessionSystem())
                 .Add(new DestroyEntitySystem())
 
                 .Add(new ValidatePossibleMovesSystem())
                 .Add(new ShuffleBoardSystem())
                 
-                .Add(new GameTimerSystem())
 
                 .DelHere<MoveCompleteComponent>()
                 .DelHere<FallPieceCommand>()
@@ -70,7 +72,10 @@ namespace Initialization.ECS
                     .Inject(GetInjectables())
                     .Init();
             
-            Observable.EveryUpdate().Subscribe(_ => RunSystems());
+            Observable.EveryUpdate()
+                .Where(_ => _gameSessionModel.EcsSystemsOnline.Value)
+                .Subscribe(_ => RunSystems())
+                .AddTo(_disposer);
         }
 
         //LeoECS injection doesn't pair well with Zenject, so we have to inject the dependencies manually
@@ -96,17 +101,8 @@ namespace Initialization.ECS
             };
         }
         
-        public void ToggleSystems(bool enable)
-        {
-            _systemsOn = enable;
-        }
-        
         private void RunSystems()
         {
-            if (!_systemsOn)
-            {
-                return;
-            }
             _systems.Run();
         }
     }

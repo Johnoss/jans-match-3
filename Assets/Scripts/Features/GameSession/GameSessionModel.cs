@@ -10,20 +10,23 @@ namespace Scripts.Features.GameSession
     public class GameSessionModel : AbstractModel
     {
         private readonly ReactiveProperty<float> _remainingSeconds = new(0);
+        private readonly ReactiveProperty<float> _score = new(0);
         private readonly ReactiveProperty<bool> _isIsTimerPaused = new(false);
         private readonly ReactiveProperty<int> _currentCombo = new(0);
-        private readonly ReactiveProperty<float> _score = new(0);
+        private readonly ReactiveProperty<bool> _ecsSystemsOnline = new(false);
         
         public IReadOnlyReactiveProperty<bool> IsGameRunning => RemainingSeconds.Select(seconds => seconds > 0).ToReadOnlyReactiveProperty();
         public IReadOnlyReactiveProperty<float> Score => _score;
         public IReadOnlyReactiveProperty<float> RemainingSeconds => _remainingSeconds;
         public IReadOnlyReactiveProperty<bool> IsTimerPaused => _isIsTimerPaused;
         public IReadOnlyReactiveProperty<int> CurrentCombo => _currentCombo;
+        public IReadOnlyReactiveProperty<bool> EcsSystemsOnline => _ecsSystemsOnline;
 
         public float HighScore => PlayerPrefsUtils.GetFloat(_rulesConfig.HighScoreKey, 0);
 
         [Inject] private RulesConfig _rulesConfig;
         
+
         public void IncrementScore(float deltaScore)
         {
             _score.Value += deltaScore;
@@ -59,7 +62,12 @@ namespace Scripts.Features.GameSession
             _remainingSeconds.Value = seconds;
         }
 
-        public void SetCurrentCombo(int combo)
+        public void ToggleEcsSystems(bool isActive)
+        {
+            _ecsSystemsOnline.Value = isActive;
+        }
+
+        private void SetCurrentCombo(int combo)
         {
             _currentCombo.Value = combo;
         }
