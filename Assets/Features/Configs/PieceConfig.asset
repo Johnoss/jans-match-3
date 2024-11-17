@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a75fd44820f642a79d67540c46ebf756, type: 3}
+  m_Name: PieceConfig
+  m_EditorClassIdentifier: 
+  _pieceEntityPrefab: {fileID: 13627573644787034, guid: de668cf14a4c8894199d1a199e915812, type: 3}
+  _pieceSettings:
+  - BodySprite: {fileID: 21300008, guid: 51e2a399831333b478ec978ee598bf0e, type: 3}
+    MouthSprite: {fileID: 21300012, guid: 2498b83b05df0bb47a43231ae453ffec, type: 3}
+    EyesSprite: {fileID: 1684814514, guid: 8a0ccb871deadb543a91b65a04fac4fd, type: 3}
+    EyesTintColor: {r: 0.81266844, g: 0.93041974, b: 1, a: 1}
+  - BodySprite: {fileID: 21300000, guid: 51e2a399831333b478ec978ee598bf0e, type: 3}
+    MouthSprite: {fileID: 21300016, guid: 2498b83b05df0bb47a43231ae453ffec, type: 3}
+    EyesSprite: {fileID: -1447207123, guid: 8a0ccb871deadb543a91b65a04fac4fd, type: 3}
+    EyesTintColor: {r: 0.99999994, g: 0.81358397, b: 0.79649585, a: 1}
+  - BodySprite: {fileID: 21300006, guid: 51e2a399831333b478ec978ee598bf0e, type: 3}
+    MouthSprite: {fileID: 21300006, guid: 2498b83b05df0bb47a43231ae453ffec, type: 3}
+    EyesSprite: {fileID: 1758974454, guid: 8a0ccb871deadb543a91b65a04fac4fd, type: 3}
+    EyesTintColor: {r: 0.8921368, g: 1, b: 0.7156334, a: 1}
+  - BodySprite: {fileID: 21300012, guid: 51e2a399831333b478ec978ee598bf0e, type: 3}
+    MouthSprite: {fileID: 21300000, guid: 2498b83b05df0bb47a43231ae453ffec, type: 3}
+    EyesSprite: {fileID: -1015964146, guid: 8a0ccb871deadb543a91b65a04fac4fd, type: 3}
+    EyesTintColor: {r: 1, g: 0.9981581, b: 0.83423173, a: 1}
+  - BodySprite: {fileID: 21300016, guid: 51e2a399831333b478ec978ee598bf0e, type: 3}
+    MouthSprite: {fileID: 21300000, guid: 2498b83b05df0bb47a43231ae453ffec, type: 3}
+    EyesSprite: {fileID: -1015964146, guid: 8a0ccb871deadb543a91b65a04fac4fd, type: 3}
+    EyesTintColor: {r: 1, g: 0.95505744, b: 0.8665768, a: 1}
