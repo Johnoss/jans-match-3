@@ -1,7 +1,9 @@
 using DG.Tweening;
+using Scripts.Features.GameSession;
 using Scripts.Features.Grid.Moving;
 using Scripts.Features.Tweening;
 using Scripts.Utils;
+using UniRx;
 using UnityEngine;
 using Zenject;
 
@@ -18,6 +20,8 @@ namespace Scripts.Features.Grid
 
         [Inject] private GridConfig _gridConfig;
         [Inject] private TweenConfig _tweenConfig;
+        [Inject] private GameSessionModel _gameSessionModel;
+        [Inject] private CompositeDisposable _disposer;
 
         private Tweener _startTweener;
         
@@ -26,9 +30,13 @@ namespace Scripts.Features.Grid
         
         public void SetupGridView()
         {
-            PlayStartAnimation();
+            _maskRectTransform.sizeDelta = Vector2.zero;
             
             _maskRectTransform.sizeDelta = Vector2.zero;
+            
+            _gameSessionModel.IsGameRunning
+                .Where(isRunning => isRunning)
+                .Subscribe(_ => PlayStartAnimation()).AddTo(_disposer);
         }
         
         private void PlayStartAnimation()

@@ -25,7 +25,6 @@ namespace Scripts.Features.UI
         [Header("Timer")]
         [SerializeField] private Image _timerFillImage;
         [SerializeField] private TextMeshProUGUI _timerText;
-        [SerializeField] private GameObject _focusImage;
         [SerializeField] private GameObject[] _pauseIndicators;
         
         [Header("Combo")]
@@ -94,8 +93,6 @@ namespace Scripts.Features.UI
             {
                 pauseIndicator.SetActive(isPaused);
             }
-            
-            _focusImage.SetActive(!isPaused);
         }
         
         private void OnComboChanged(int combo)
