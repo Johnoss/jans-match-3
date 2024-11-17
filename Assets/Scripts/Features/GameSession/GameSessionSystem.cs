@@ -23,7 +23,13 @@ namespace Scripts.Features.GameSession
         
         public void Run(EcsSystems systems)
         {
-            _gameSessionModel.Value.SetTimerPaused(_pausedTimerFilter.Value.GetEntitiesCount() > 0);
+            var isBoardBusy = _pausedTimerFilter.Value.GetEntitiesCount() > 0;
+            _gameSessionModel.Value.SetTimerPaused(isBoardBusy);
+            if (!isBoardBusy)
+            {
+                _gameSessionModel.Value.ResetCombo();
+            }
+            
             TryCleanupAfterGameOver();
         }
 

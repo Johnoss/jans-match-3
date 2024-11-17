@@ -1,5 +1,6 @@
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
+using Scripts.Features.GameSession;
 using Scripts.Features.Piece;
 using Scripts.Features.Spawning;
 using Scripts.Features.Time;
@@ -18,15 +19,22 @@ namespace Scripts.Features.Grid.Matching
         
         private EcsCustomInject<EcsWorld> _world;
         private EcsCustomInject<TweenConfig> _tweenConfig;
+        private EcsCustomInject<GameSessionController> _gameSessionController;
         
         public void Run(EcsSystems systems)
         {
+            var totalMatches = _isMatchFilter.Value.GetEntitiesCount();
+            if (totalMatches == 0)
+            {
+                return;
+            }
             foreach (var pieceEntity in _isMatchFilter.Value)
             {
                 _destroyEntityCommandPool.Value.Add(pieceEntity) = new DestroyEntityCommand();
 
                 SetupSpawnNewPiece(pieceEntity);
             }
+            _gameSessionController.Value.IncrementScore(totalMatches);
         }
 
         private void SetupSpawnNewPiece(int pieceEntity)

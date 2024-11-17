@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Leopotam.EcsLite;
 using Leopotam.EcsLite.Di;
+using Scripts.Features.GameSession;
 using Scripts.Features.Grid.Moving;
 using Scripts.Features.Piece;
 
@@ -19,6 +20,7 @@ namespace Scripts.Features.Grid.Matching
         
         private EcsCustomInject<MatchingService> _matchingService;
         private EcsCustomInject<GridService> _gridService;
+        private EcsCustomInject<RulesConfig> _rulesConfig;
 
         public void Run(EcsSystems systems)
         {
@@ -60,7 +62,7 @@ namespace Scripts.Features.Grid.Matching
                 MarkMatchedPieces(_gridService.Value.GetPieceEntitiesAtCoordinates(legalMatches));
             }
         }
-        
+
         private void MarkMatchedPieces(HashSet<int> getPieceEntitiesAtCoordinates)
         {
             foreach (var pieceEntity in getPieceEntitiesAtCoordinates.Where(pieceEntity => !_isMatchPool.Value.Has(pieceEntity)))

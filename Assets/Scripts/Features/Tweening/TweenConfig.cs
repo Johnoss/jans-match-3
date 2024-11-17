@@ -17,19 +17,20 @@ namespace Scripts.Features.Tweening
         [Header("Collect Piece Tweens")]
         [Tooltip("DoPunchScale with DoFade.")]
         [SerializeField] private TweenSetting _collectTweenSetting;
-        [SerializeField] private Vector2 _collectPunchScale;
-        
         public TweenSetting CollectTweenSetting => _collectTweenSetting;
-        public Vector2 CollectPunchScale => _collectPunchScale;
         
         [Header("Visual Feedback Tweens")]
         [Tooltip("DoPunchScale")]
         [SerializeField] private TweenSetting _hintTweenSetting;
         [Tooltip("DoShakeRotation")]
         [SerializeField] private TweenSetting _invalidSwapTweenSetting;
+        [SerializeField] private float _comboScaleMultiplier = 1.2f;
+        [SerializeField] private float _comboShakeTweenSetting = 0.2f;
         
         public TweenSetting HintTweenSetting => _hintTweenSetting;
         public TweenSetting InvalidSwapTweenSetting => _invalidSwapTweenSetting;
+        public float ComboScaleMultiplier => _comboScaleMultiplier;
+        public float ComboShakeEndValue => _comboShakeTweenSetting;
 
         [Header("Launch Tweens")]
         [Tooltip("DoSizeDelta on the mask.")]

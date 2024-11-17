@@ -10,6 +10,14 @@ namespace Scripts.Features.Grid.Matching
         public int MinMatchLength => _minMatchLength;
         public bool AllowSquareMatches => _allowSquareMatches;
         
+        [Header("Score")]
+        [SerializeField] private float _baseScore = 45;
+        [Tooltip("Bonus for combo. BaseScore + (Combo * ComboAdditiveBonus)")]
+        [SerializeField] private float _comboAdditiveBonus = 15;
+        
+        public float BaseScore => _baseScore;
+        public float ComboAdditiveBonus => _comboAdditiveBonus;
+        
         [Header("Possible Moves")]
         [SerializeField] private int _maxIterationsPerFrame = 10;
         [SerializeField] private float _possibleMoveCheckDelaySeconds = 3f;
@@ -21,8 +29,10 @@ namespace Scripts.Features.Grid.Matching
         
         [Header("Game Session")]
         [SerializeField] private float _gameDurationSeconds = 3 * 60f;
+        [SerializeField] private bool _showSeconds = true;
         
         public float GameDurationSeconds => _gameDurationSeconds;
+        public bool ShowSeconds => _showSeconds;
         
         [Header("Serialization")]
         [SerializeField] private string _highScoreKey = "Score";

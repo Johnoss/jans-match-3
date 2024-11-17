@@ -33,6 +33,7 @@ namespace Initialization.ECS
         [Inject] private GridView _gridView;
         
         [Inject] private GameSessionModel _gameSessionModel;
+        [Inject] private GameSessionController _gameSessionController;
         [Inject] private CompositeDisposable _disposer;
         
         private EcsSystems _systems;
@@ -98,6 +99,7 @@ namespace Initialization.ECS
                 _gridView,
                 
                 _gameSessionModel,
+                _gameSessionController,
             };
         }
         

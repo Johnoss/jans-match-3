@@ -29,6 +29,8 @@ namespace Scripts.Features.GameSession
         [Inject]
         public void Initialize()
         {
+            _gameSessionModel.SetupHighScore();
+            
             _gameSessionModel.IsGameRunning
                 .Where(hasTime => !hasTime)
                 .Skip(1)
@@ -55,9 +57,23 @@ namespace Scripts.Features.GameSession
             gameExpireComponent.RemainingSeconds = defaultSeconds;
         }
 
+        public void IncrementScore(int matchedPiecesCount)
+        {
+            _gameSessionModel.IncrementCombo();
+            
+            var combo = _gameSessionModel.CurrentCombo.Value;
+            var baseScore = _rulesConfig.BaseScore;
+            var comboAdditiveBonus = _rulesConfig.ComboAdditiveBonus * combo;
+            var scoreForPiece = baseScore + comboAdditiveBonus;
+            var totalScore = matchedPiecesCount * scoreForPiece;
+            
+            _gameSessionModel.IncrementScore(totalScore);
+        }
+
         private void OnGameOver()
         {
             _world.GetPool<GameOverCommand>().Add(_gameSessionEntity);
+            _gameSessionModel.SetFinalScore();
             //Toggle systems off?
             //TODO ditch all pieces and show score
         }
